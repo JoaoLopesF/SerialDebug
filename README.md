@@ -291,6 +291,9 @@ Just download or clone this repository.
 
 For install help, please see: https://www.arduino.cc/en/Guide/Libraries
 
+Note: In some boards, after upload if you see only dirty characteres in serial monitor,
+please reset the board. There is possibly some glitch in the serial monitor of Arduino
+
 ## Usage
 
     Please open the examples to see it working:
