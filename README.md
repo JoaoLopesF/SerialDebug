@@ -145,7 +145,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
             Serial.print(varB);
             Serial.print(" varC =  ");
             Serial.print(varC);
-            Serial.println();
+            Serial.println(); 
 
         Can be converted to a single command:
 
