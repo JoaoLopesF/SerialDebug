@@ -74,7 +74,11 @@ uint8_t mRunHours = 0;
 // Buildin Led ON ?
 
 #ifndef LED_BUILTIN // For compatibility
-	#define LED_BUILTIN BUILTIN_LED
+	#ifdef BUILTIN_LED
+		#define LED_BUILTIN BUILTIN_LED
+	#else
+		#define LED_BUILTIN 2
+	#endif
 #endif
 
 boolean mLedON = false;
