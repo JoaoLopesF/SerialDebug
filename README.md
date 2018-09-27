@@ -1,7 +1,7 @@
 # SerialDebug Library for Arduino
 
 ![build badge](https://github.com/JoaoLopesF/SerialDebug/blob/master/badges/build.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
-[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)]
+![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 
 
 Improved serial debugging to Arduino with simple software debugger,
