@@ -8,6 +8,7 @@
  * Versions  :
  * ------ 	-------- 	-------------------------
  * 0.9.0  	26/08/18	First beta
+ * 0.9.1	28/08/18    Few adjustments
  *****************************************/
 
 /*
@@ -101,7 +102,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.0")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.1")                   	// Version of this library
 
 // Low memory board ?
 
@@ -1140,7 +1141,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 				// Has triggered  ?
 
-				if (!watch->triggered & triggered) {
+				if (!watch->triggered && triggered) {
 
 					watch->triggered = true;
 
@@ -1312,14 +1313,16 @@ int8_t debugAddFunctionInt(const __FlashStringHelper* name, void (*callback)(int
 
 void debugSetLastFunctionDescription(const char *description) {
 
-	_debugFunctions[_debugFunctionsAdded - 1].description = description;
-
+	if (_debugFunctionsAdded > 0) {
+		_debugFunctions[_debugFunctionsAdded - 1].description = description;
+	}
 }
 
 void debugSetLastFunctionDescription(const __FlashStringHelper *description) {
 
-	_debugFunctions[_debugFunctionsAdded - 1].descriptionF = description;
-
+	if (_debugFunctionsAdded > 0) {
+		_debugFunctions[_debugFunctionsAdded - 1].descriptionF = description;
+	}
 }
 #endif
 
