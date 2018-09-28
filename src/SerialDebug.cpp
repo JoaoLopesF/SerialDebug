@@ -1160,7 +1160,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 						PRINTFLN(F("$app:T:%u:1"), (w + 1));
 					}
 
-				} else if (watch->triggered & !triggered) { // Unmark it
+				} else if (watch->triggered && !triggered) { // Unmark it
 
 					watch->triggered = false;
 
