@@ -847,6 +847,7 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 	if(len >= bufSize){
 	    temp = new char[len+1];
 	    if(temp == NULL) {
+	    	va_end(arg);
 	        return;
 	    }
 	}
@@ -941,6 +942,7 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 	if(len >= bufSize){
 	    temp = new char[len+1];
 	    if(temp == NULL) {
+	    	va_end(arg);
 	        return;
 	    }
 	}
