@@ -1,5 +1,5 @@
 /*****************************************
- * Library   : SerialDebug - Improved serial debugging to Arduino with simple software debugger
+ * Library   : SerialDebug - Improved serial debugging to Arduino, with simple software debugger
  * Programmer: Joao Lopes
  * Comments  : Tips on gcc logging seen at http://www.valvers.com/programming/c/logging-with-gcc/
  *             For remote debugging -> RemodeDebug: https://github.com/JoaoLopesF/SerialDebug
@@ -328,8 +328,7 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 *\r\n\
 *   Not yet implemented:\r\n\
 *      gpio -> see/control gpio\r\n\
-*\r\n\
-";
+*";
 
 #else // Low memory board
 
@@ -358,8 +357,7 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 *\r\n\
 *   Not yet implemented:\r\n\
 *      gpio -> see/control gpio\r\n\
-*\r\n\
-";
+*";
 
 #endif
 
@@ -540,7 +538,7 @@ void debugHandleInactive() {
 
 		if (execCount % 2 == 0) { // For each 2 seconds
 			printSerialDebug();
-			Serial.println(F("Please press any key and enter to activate debugs"));
+			Serial.println(F("Please press ? or another command and enter to activate debugs"));
 		}
 
     	execCount--;
@@ -5437,6 +5435,7 @@ static void processFunctions(String& options) {
 
 			// Just show functions and help
 
+			option = "";
 			showFunctions(option,false);
 
 		} else if (option.indexOf('*') >= 0) {
@@ -5746,9 +5745,9 @@ static void callFunction(String& options) {
 
 	printSerialDebug();
 	if (_debugFunctions[num].name) { // Memory
-		PRINTFLN(F("Calling function %u -> %s("), (num + 1), _debugFunctions[num].name);
+		PRINTF(F("Calling function %u -> %s("), (num + 1), _debugFunctions[num].name);
 	} else if (_debugFunctions[num].nameF) { // Use a temporary var to not get flash again
-		PRINTFLN(F("Calling function %u -> %s("), (num + 1), _debugString.c_str());
+		PRINTF(F("Calling function %u -> %s("), (num + 1), _debugString.c_str());
 	}
 
 	if (!_debugFunctions[num].callback) { // Callback not set ?
@@ -5796,7 +5795,11 @@ static void callFunction(String& options) {
 			{
 				// String arq
 
-				PRINTFLN(F("%s) ..."), funcArg.c_str());
+				if (funcArg.indexOf('"') != -1) {
+					PRINTFLN(F("%s) ..."), funcArg.c_str());
+				} else {
+					PRINTFLN(F("\"%s\") ..."), funcArg.c_str());
+				}
 				delay(500);
 
 				removeQuotation(funcArg, false);

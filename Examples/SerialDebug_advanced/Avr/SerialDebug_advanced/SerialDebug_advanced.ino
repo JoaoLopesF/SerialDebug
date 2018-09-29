@@ -273,7 +273,7 @@ void loop()
 		debugI(F("* This is a message of debug level INFO"));
 		debugW(F("* This is a message of debug level WARNING"));
 
-		if (mRunSeconds == 20) { // Just for not show initially
+		if (mRunSeconds == 55) { // Just for not show initially
 			debugE(F("* This is a message of debug level ERROR"));
 		}
 

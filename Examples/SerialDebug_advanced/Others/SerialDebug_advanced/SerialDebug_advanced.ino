@@ -279,7 +279,7 @@ void loop()
 		debugI("* This is a message of debug level INFO");
 		debugW("* This is a message of debug level WARNING");
 
-		if (mRunSeconds == 20) { // Just for not show initially
+		if (mRunSeconds == 55) { // Just for not show initially
 			debugE("* This is a message of debug level ERROR");
 		}
 

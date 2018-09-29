@@ -1,10 +1,10 @@
 # SerialDebug Library for Arduino
 
-![build badge](https://img.shields.io/badge/version-v0.9.1-blue.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
 
 
-Improved serial debugging to Arduino with simple software debugger,
+Improved serial debugging to Arduino, with simple software debugger,
 to see/change global variables, to add watch for these variables,
 or call a function, in runtime, using serial monitor.
 
@@ -572,9 +572,17 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
 
-#### 0.9 - 26/09/18
+#### 0.9.2 - 29/09/18
 
-  - First Beta
+    - Few adjustments
+
+#### 0.9.1 - 28/09/18
+
+    - Few adjustments
+
+#### 0.9.0 - 26/09/18
+
+    - First beta
 
 ## Resources
 
