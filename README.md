@@ -13,8 +13,8 @@ or call a function, in runtime, using serial monitor.
  - [Beta version](#beta-version)
  - [Github](#github)
  - [Benefits](#benefits)
- - [Commands](#commands)
  - [How it looks](#how-it-looks-1)
+ - [Commands](#commands)
  - [Install](#install)
  - [Usage](#usage)
  - [Watches](#watches)
@@ -216,6 +216,10 @@ __SerialDebug__ is bether than Arduino default serial debugging:
         And better for DEBUG_DISABLED, __SerialDebug__ have ZERO overhead, 
         due is nothing of this is compiled
 
+## How it looks
+
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/EfvF55Ww-lU/0.jpg)](https://www.youtube.com/watch?v=EfvF55Ww-lU)
+
 ## Commands
 
 __SerialDebug__ takes care of inputs from serial, and process predefined commands as:
@@ -284,11 +288,6 @@ Notes:
   - watches is not for low memory boards, as Uno.
   - memory and reset, yet implemented only to AVR, Espressif, Teensy, and Arm (in test).
   
-## How it looks
-
-[![IMAGE ALT TEXT HERE](https://www.youtube.com/watch?v=EfvF55Ww-lU/0.jpg)](https://www.youtube.com/watch?v=EfvF55Ww-lU)
-
-
 ## Install 
 
 Just download or clone this repository.
