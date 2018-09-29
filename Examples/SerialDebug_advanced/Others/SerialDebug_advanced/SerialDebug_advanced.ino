@@ -1,7 +1,7 @@
 ////////
 // Libraries Arduino
 //
-// Library: SerialDebug - Improved and lightweight serial debugging to Arduino
+// Library: SerialDebug - Improved serial debugging to Arduino, with simple software debugger
 // Author: Joao Lopes
 //
 // Example to show how to use it.

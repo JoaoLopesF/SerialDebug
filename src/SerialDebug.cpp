@@ -9,6 +9,7 @@
  * ------ 	-------- 	-------------------------
  * 0.9.0  	26/08/18	First beta
  * 0.9.1	28/08/18    Few adjustments
+ * 0.9.2	28/08/18    Few adjustments
  *****************************************/
 
 /*
@@ -102,7 +103,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.1")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.2")                   	// Version of this library
 
 // Low memory board ?
 
