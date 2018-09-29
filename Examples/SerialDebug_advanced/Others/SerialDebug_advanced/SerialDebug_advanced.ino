@@ -23,7 +23,7 @@
 // Note: this version is for Espressif or ARM boards,
 //       Not using F() to reduce memory,
 //       due these boards have memory a lot,
-//		 and RAM memory is much faster than Flash memory
+//	     and RAM memory is much faster than Flash memory
 //       If want or need, please open the example in Directory Arduino.
 ///////
 

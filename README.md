@@ -1,7 +1,7 @@
 # SerialDebug Library for Arduino
 
-![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
-![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
+<a>![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a>![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 
 
 Improved serial debugging to Arduino, with simple software debugger,
@@ -286,9 +286,8 @@ Notes:
   
 ## How it looks
 
-````
-(soon I will put a video here)
-````
+[![IMAGE ALT TEXT HERE](https://www.youtube.com/watch?v=EfvF55Ww-lU/0.jpg)](https://www.youtube.com/watch?v=EfvF55Ww-lU)
+
 
 ## Install 
 
