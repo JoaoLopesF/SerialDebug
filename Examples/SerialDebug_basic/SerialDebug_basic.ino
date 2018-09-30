@@ -33,7 +33,7 @@
 // #define DEBUG_INITIAL_LEVEL DEBUG_LEVEL_VERBOSE
 
 // Disable SerialDebug debugger ? No more commands and features as functions and globals
-// Uncomment this to disable it (SerialDebug will not do reads from Serial, good if already have this)
+// Uncomment this to disable it 
 //#define DEBUG_DISABLE_DEBUGGER true
 
 // Disable auto function name (good if your debug yet contains it)

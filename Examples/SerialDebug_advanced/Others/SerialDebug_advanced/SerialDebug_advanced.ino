@@ -37,7 +37,7 @@
 //#define DEBUG_DISABLED true
 
 // Disable SerialDebug debugger ? No more commands and features as functions and globals
-// Uncomment this to disable it (SerialDebug will not do reads from Serial, good if already have this)
+// Uncomment this to disable it 
 //#define DEBUG_DISABLE_DEBUGGER true
 
 // Debug TAG ?
