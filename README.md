@@ -1,7 +1,7 @@
 # SerialDebug Library for Arduino
 
-<a>![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
-<a>![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 
 
 Improved serial debugging to Arduino, with simple software debugger,
@@ -59,7 +59,7 @@ it help to keep updated.
 
 __SerialDebug__ is bether than Arduino default serial debugging:
 
-  - This is __optimized__
+  - This is __optimized__ for features that it have
 
         The initial status of SerialDebug is inactive,
         where no normal debug outputs, and no CPU waste time for debugs.
@@ -93,11 +93,11 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
         But it runs in older Arduino, as UNO, Leonardo, Mega, ...
         In UNO or similar some features as Watches in debugger is not implemented,
-        due full library is huge for it (more than 7k lines of code).
+        due full library is huge for it (more than 5k lines of code, without comments).
         For the Mega, some features are reduced, but have watches.
         
         If debugger is disabled, SerialDebug in UNO,
-        consumes only about 170 bytes of memory.
+        consumes only about 150 bytes of memory.
         And it not fully otimized yet.
 
         The default speed of serial is 250000, for Espressif, ARM or Mega boards
@@ -206,6 +206,10 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
         It not have some features than a real hardware debugger,
         but is good features, for when yet have none of this ...
+        It is for when not have a real hardware debugger, 
+        e.g. GDB w/ JTAG, or not have skill on it.
+
+        It can be disabled, if not want it.
 
         See about this below.
 
