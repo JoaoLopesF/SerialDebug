@@ -574,7 +574,7 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
 
-#### 0.9.3 - 09/29/18
+#### 0.9.3 - 10/01/18
 
     - Few adjustments
 
