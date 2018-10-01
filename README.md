@@ -574,19 +574,19 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
 
-#### 0.9.3 - 10/01/18
+#### 0.9.3 - 2018-10-01
 
     - Few adjustments
 
-#### 0.9.2 - 09/29/18
+#### 0.9.2 - 2018-09-29
 
     - Few adjustments
 
-#### 0.9.1 - 09/28/18
+#### 0.9.1 - 2018-09-28
 
     - Few adjustments
 
-#### 0.9.0 - 09/26/18
+#### 0.9.0 - 2018-09-26
 
     - First beta
 

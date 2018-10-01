@@ -6,11 +6,11 @@
  * 			   Based on RemoteDebug library and ESP-IDF logging debug levels
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
- * ------ 	-------- 	-------------------------
- * 0.9.3	10/01/18    Few adjustments
- * 0.9.2	08/28/18    Few adjustments
- * 0.9.1	08/28/18    Few adjustments
- * 0.9.0  	08/26/18	First beta
+ * ------ 	---------- 		-------------------------
+ * 0.9.3	2018-10-01   	Few adjustments
+ * 0.9.2	2018-08-28    	Few adjustments
+ * 0.9.1	2018-08-28   	Few adjustments
+ * 0.9.0  	2018-08-26		First beta
  *****************************************/
 
 /*

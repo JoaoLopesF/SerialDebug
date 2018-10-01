@@ -4,8 +4,8 @@
  * Module    : fields - toprocess delimited fields in string
  * Comments  : TODO: make it a library to Arduino and ESP-IDF
  * Versions  :
- * ------- 	-------- 	-------------------------
- * 0.1.0 	05/09/18 	First version
+ * ------- 	----------	-------------------------
+ * 0.1.0 	2018-05-09 	First version
  */
 
 ///// Includes
