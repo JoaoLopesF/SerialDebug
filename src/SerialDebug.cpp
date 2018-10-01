@@ -7,9 +7,10 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	-------- 	-------------------------
- * 0.9.0  	26/08/18	First beta
- * 0.9.1	28/08/18    Few adjustments
- * 0.9.2	28/08/18    Few adjustments
+ * 0.9.3	10/01/18    Few adjustments
+ * 0.9.2	08/28/18    Few adjustments
+ * 0.9.1	08/28/18    Few adjustments
+ * 0.9.0  	08/26/18	First beta
  *****************************************/
 
 /*
@@ -103,7 +104,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.2")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.3")                   	// Version of this library
 
 // Low memory board ?
 

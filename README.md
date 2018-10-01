@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.3-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 
 
@@ -574,15 +574,19 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
 
-#### 0.9.2 - 29/09/18
+#### 0.9.3 - 09/29/18
 
     - Few adjustments
 
-#### 0.9.1 - 28/09/18
+#### 0.9.2 - 09/29/18
 
     - Few adjustments
 
-#### 0.9.0 - 26/09/18
+#### 0.9.1 - 09/28/18
+
+    - Few adjustments
+
+#### 0.9.0 - 09/26/18
 
     - First beta
 
