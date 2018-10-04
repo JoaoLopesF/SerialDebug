@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.4    2018-10-04		Now debugger starts disabled
  * 0.9.3	2018-10-01   	Few adjustments
  * 0.9.2	2018-08-28    	Few adjustments
  * 0.9.1	2018-08-28   	Few adjustments
@@ -104,7 +105,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.3")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.4")                   	// Version of this library
 
 // Low memory board ?
 
@@ -123,11 +124,11 @@ bool _debugShowProfiler = true;						// Show profiler time ?
 uint16_t _debugMinTimeShowProfiler = 0;				// Minimum time to show profiler
 unsigned long _debugLastTime = millis(); 			// Last time show a debug
 
-#if defined ESP32 || defined ESP8266 // For Espressif boards
+#if defined ESP32 || defined ESP8266 				// For Espressif boards
 char _debugShowISR = ' ';							// Can show ISR (only if in 115200 bps)
 #endif
 
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+#ifndef DEBUG_DISABLE_DEBUGGER 						// Only if debugger is enabled
 
 uint8_t _debugFunctionsAdded = 0;					// Number of functions added
 
@@ -139,6 +140,8 @@ uint8_t _debugWatchesAdded = 0;						// Number of watches added
 boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add any)?
 
 #endif
+
+boolean _debugDebuggerEnabled = false;				// Simple Software Debugger enabled ?
 
 #endif // DEBUG_DISABLE_DEBUGGER
 
@@ -298,6 +301,8 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 	// To show help (uses PROGMEM)
 	// Note: Using PROGMEM in large string (even for Espressif boards)
 
+#ifndef DEBUG_DISABLE_DEBUGGER
+
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
    static const char debugHelp[] PROGMEM = \
@@ -320,9 +325,11 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 *      r ? -> to show more help \r\n\
 *   reset -> reset the Arduino board\r\n\
 *\r\n\
+*   f -> call the function\r\n\
+*      f ?  -> to show more help \r\n\
+*   dbg [on|off] -> enable/disable the simple software debugger\r\n\
+*\r\n\
 *   Only if debugger is enabled: \r\n\
-*      f -> call the function\r\n\
-*         f ?  -> to show more help \r\n\
 *      g -> see/change global variables\r\n\
 *         g ?  -> to show more help \r\n\
 *      wa -> see/change watches for global variables\r\n\
@@ -351,9 +358,11 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 *      r ? -> to show more help \r\n\
 *   reset -> reset the Arduino board\r\n\
 *\r\n\
+*   f -> call the function\r\n\
+*      f ?  -> to show more help \r\n\
+*   dbg [on|off] -> enable/disable the simple software debugger\r\n\
+*\r\n\
 *   Only if debugger is enabled: \r\n\
-*      f -> call the function\r\n\
-*         f ?  -> to show more help \r\n\
 *      g -> see/change global variables\r\n\
 *         g ?  -> to show more help \r\n\
 *\r\n\
@@ -363,7 +372,62 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 
 #endif
 
-	/////// Prototypes - private
+#else // Debugger disabled
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+   static const char debugHelp[] PROGMEM = \
+"\
+*\r\n\
+* Commands:\r\n\
+*   ? or help -> display these help of commands\r\n\
+*   m -> show free memory\r\n\
+*   n -> set debug level to none\r\n\
+*   v -> set debug level to verbose\r\n\
+*   d -> set debug level to debug\r\n\
+*   i -> set debug level to info\r\n\
+*   w -> set debug level to warning\r\n\
+*   e -> set debug level to errors\r\n\
+*   s -> silence (Not to show anything else, good for analysis)\r\n\
+*   p -> profiler:\r\n\
+*      p      -> show time between actual and last message (in millis)\r\n\
+*      p min  -> show only if time is this minimal\r\n\
+*   r -> repeat last command (in each debugHandle)\r\n\
+*      r ? -> to show more help \r\n\
+*   reset -> reset the Arduino board\r\n\
+*\r\n\
+*   Not yet implemented:\r\n\
+*      gpio -> see/control gpio\r\n\
+*";
+
+#else // Low memory board
+
+   static const char debugHelp[] PROGMEM = \
+"\
+*\r\n\
+* Commands:\r\n\
+*   ? or help -> display these help of commands\r\n\
+*   m -> show free memory\r\n\
+*   n -> set debug level to none\r\n\
+*   v -> set debug level to verbose\r\n\
+*   d -> set debug level to debug\r\n\
+*   i -> set debug level to info\r\n\
+*   w -> set debug level to warning\r\n\
+*   e -> set debug level to errors\r\n\
+*   s -> silence (Not to show anything else, good for analysis)\r\n\
+*   r -> repeat last command (in each debugHandle)\r\n\
+*      r ? -> to show more help \r\n\
+*   reset -> reset the Arduino board\r\n\
+*\r\n\
+*   Not yet implemented:\r\n\
+*      gpio -> see/control gpio\r\n\
+*";
+
+#endif
+
+#endif // DEBUG_DISABLE_DEBUGGER
+
+   /////// Prototypes - private
 
 	// Note: only public functions start with debug...
 
@@ -5227,6 +5291,32 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 #endif // Not low memory board
 
+	} else if (command == "dbg") {
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+		// Enable/disable the Simple Software Debugger
+
+		if (options == "on") {
+			_debugDebuggerEnabled = true;
+		} else if (options == "off") {
+			_debugDebuggerEnabled = false;
+		} else {
+			_debugDebuggerEnabled = !_debugDebuggerEnabled; // invert it
+		}
+
+		if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+			// Send status
+
+			PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+		}
+
+#else
+		printSerialDebug();
+		Serial.println(F("Debug functions is not enabled in your project"));
+
+#endif
 	} else if (command == "f") {
 
 #ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
@@ -6823,14 +6913,14 @@ static void debugSerialAppConnection(boolean versionPro) {
 
 	// Send debugger elements
 
-	if (versionPro) { // Somente para o PRO
+	if (versionPro) { // Only for App PRO
 
 		printSerialDebug();
 		PRINTFLN(F("Sending debugger objects ..."));
 
-		// Send info para limpar os arrays do debugger
+		// Send info
 
-		PRINTFLN(F("$app:D:"));
+		PRINTFLN(F("$app:D:")); // To clean arrays
 
 		String all="";
 
@@ -6849,6 +6939,10 @@ static void debugSerialAppConnection(boolean versionPro) {
 		}
 
 #endif // BOARD_LOW_MEMORY
+
+		// Send status of debugger
+
+		PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
 
 		printSerialDebug();
 		PRINTFLN(F("End of sending."));

@@ -369,6 +369,7 @@ extern uint8_t _debugFunctionsAdded;			// Number of functions added
 extern uint8_t _debugGlobalsAdded;				// Number of globals added
 extern uint8_t _debugWatchesAdded;				// Number of watches added
 extern boolean _debugWatchesEnabled;			// Watches is enabled (only after add any)?
+extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 #endif
 
 //////// Defines and macros
@@ -395,7 +396,7 @@ extern boolean _debugWatchesEnabled;			// Watches is enabled (only after add any
 
 #ifndef DEBUG_DISABLE_DEBUGGER
 	#define DEBUG_HANDLE_DEBUGGER() \
-		if (_debugGlobalsAdded > 0 && _debugWatchesEnabled) { \
+		if (_debugDebuggerEnabled && _debugGlobalsAdded > 0 && _debugWatchesEnabled) { \
 			debugHandleDebugger(false); \
 		}
 #else

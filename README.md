@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.3-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.4-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 
 
@@ -83,6 +83,9 @@ __SerialDebug__ is bether than Arduino default serial debugging:
           - Is used void* pointer to store values, when it is need.
             Is more complicate, but it dramatically reduces use of memory, 
             compared to store 17 variables for support 17 kinds of this.
+
+        Note: due a extra overhead in processing simple software debugger,
+              it starts disable. You can enable when you need (dbg command)
 
         In future versions will more otimized, for CPU and memory
 
@@ -244,18 +247,20 @@ __SerialDebug__ takes care of inputs from serial, and process predefined command
         r ? -> to show more help 
       reset -> reset the Arduino board
     
-      Only if debugger is enabled: 
-        f -> call the function
-            f ?  -> to show more help 
-        g -> see/change global variables
+      f -> call the function
+          f ?  -> to show more help 
+      dbg [on|off] -> enable/disable the simple software debugger
+
+      Only if debugger is enabled:
+          g -> see/change global variables
             g ?  -> to show more help 
-        wa -> see/change watches for global variables
+          wa -> see/change watches for global variables
             wa ?  -> to show more help 
     
       Not yet implemented:
         gpio -> see/control gpio
 
-For debugger:
+For simple software debugger:
 
     - For functions:
 
@@ -263,6 +268,14 @@ For debugger:
       - To show: f [name|num]
       - To search with start of name (case insensitive): f name
       - To call it, just command: f [name|number] [arg]
+
+    - Enable/disable the debugger:
+
+      - To enable: dbg on
+      - To disable: dbg off
+      
+      Note: the debugger starts disabled, to avoid extra overhead to processing it
+      You can enable it when need 
 
     - For global variables:
 
@@ -573,6 +586,10 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 
 ## Releases
+
+#### 0.9.4 - 2018-10-04
+
+    - Now debugger starts disabled
 
 #### 0.9.3 - 2018-10-01
 
