@@ -19,7 +19,7 @@ or call a function, in runtime, using serial monitor.
  - [Usage](#usage)
  - [Watches](#watches)
  - [Release](#releases)
- - [Resources](#resources)
+ - [Links](#links)
  - [Thanks](#thanks)
 
 ## About
@@ -607,10 +607,13 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
     - First beta
 
-## Resources
+## Links
 
 If you need a remote debug for ESP8266 or ESP32, 
 see my other library -> https://github.com/JoaoLopesF/RemoteDebug
+
+This library is made on Slober - the Eclipse for Arduino
+See it in -> http://eclipse.baeyens.it/
 
 ## Thanks
 
