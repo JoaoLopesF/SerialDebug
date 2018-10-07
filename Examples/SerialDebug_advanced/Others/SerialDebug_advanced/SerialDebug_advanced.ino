@@ -158,12 +158,19 @@ void setup() {
     	debugSetLastFunctionDescription("To run all benchmarks");
     }
 
-    if (debugAddFunctionVoid("benchSerial", &benchSerial) >= 0) {
+    if (debugAddFunctionVoid("benchSerialPrints", &benchSerialPrint) >= 0) {
     	debugSetLastFunctionDescription("To benchmarks standard Serial debug");
     }
     if (debugAddFunctionVoid("benchSerialDebug", &benchSerialDebug) >= 0) {
     	debugSetLastFunctionDescription("To benchmarks SerialDebug");
     }
+    if (debugAddFunctionVoid(F("benchSerialDbgPr"), &benchSerialDbgPr) >= 0) {
+    	debugSetLastFunctionDescription(F("To benchmarks SerialDebug print macros"));
+    }
+    if (debugAddFunctionVoid(F("benchSerialAll"), &benchSerialAll) >= 0) {
+    	debugSetLastFunctionDescription(F("To benchmarks all Serial"));
+    }
+
 
     if (debugAddFunctionStr("funcArgStr", &funcArgStr) >= 0) {
     	debugSetLastFunctionDescription("To run with String arg");
@@ -437,27 +444,28 @@ void benchAll() {
 
 // Serial benchmarks, to compare Serial.prints with SerialDebug
 
-#define BENCHMARK_SERIAL 100
+#define BENCHMARK_SERIAL 25
 
-void benchSerial() {
+void benchSerialPrint() {
 
 	// Note: Serial.printf is not used, due most Arduino not have this
 	// Show same info to compare real speed
+	// Same data size of SerialDebug to compare speeds of processing and not the time elapsed to send it
 
 	unsigned long timeBegin = micros();
 
 	for (uint16_t i = 0; i < BENCHMARK_SERIAL; i++) {
 
-		Serial.print("(A) (");
+		Serial.print("(A ");
 		Serial.print(millis());
 #ifdef ESP32
-		Serial.print(") (C");
+		Serial.print(")(C");
 		Serial.print(xPortGetCoreID());
 		Serial.print(")");
 #else
 		Serial.print(")");
 #endif
-		Serial.print(" benchSerial: Exec.: ");
+		Serial.print(F("(benchSerialPrint) Exec.: "));
 		Serial.print(i+1);
 		Serial.print(" of ");
 		Serial.println(BENCHMARK_SERIAL);
@@ -466,10 +474,10 @@ void benchSerial() {
 
 	unsigned long elapsed = (micros() - timeBegin);
 
-	Serial.print("*** Benchmark of Serial. Execs.: ");
+	Serial.print("*** Benchmark of Serial prints. Execs.: ");
 	Serial.print(BENCHMARK_SERIAL);
-	Serial.print("- time on each debug -> ");
-	Serial.print((elapsed / BENCHMARK_SERIAL));
+	Serial.print(" time elapsed -> ");
+	Serial.print(elapsed);
 	Serial.println(" us");
 
 }
@@ -486,17 +494,67 @@ void benchSerialDebug() {
 
 	for (uint16_t i = 0; i < BENCHMARK_SERIAL; i++) {
 
-		debugA("Exec.: %02u of %02u", (i+1), BENCHMARK_SERIAL);
+		debugA("Exec.: %u of %u", (i+1), BENCHMARK_SERIAL);
 
 	}
 
 	unsigned long elapsed = (micros() - timeBegin);
 
-	debugA("*** Benchmark of Serial. Execs.: %u - time on each debug -> %lu us", \
-			BENCHMARK_SERIAL, (elapsed / BENCHMARK_SERIAL));
+	// Note not using SerialDebug macros below, to show equals that SerialPrints
+
+	Serial.print("*** Benchmark of Serial debugA. Execs.: ");
+	Serial.print(BENCHMARK_SERIAL);
+	Serial.print(" time elapsed -> ");
+	Serial.print(elapsed);
+	Serial.println(" us");
 
 	debugShowProfiler(true, 0, false); // Reenable
 
+}
+
+void benchSerialDbgPr() {
+
+	// Using print macros to avoid printf
+	// Same data size of SerialDebug to compare speeds of processing and not the time elapsed to send it
+
+	debugSetProfiler(false); // Disable it, due standard prints not have it
+
+	unsigned long timeBegin = micros();
+
+	for (uint16_t i = 0; i < BENCHMARK_SERIAL; i++) {
+
+		printA("Exec.: ");
+		printA(i+1);
+		printA(" of ");
+		printlnA(BENCHMARK_SERIAL);
+
+	}
+
+	unsigned long elapsed = (micros() - timeBegin);
+
+	debugSetProfiler(true); // Restore
+
+	// Note not using SerialDebug macros below, to show equals that SerialPrints
+
+	Serial.print("*** Benchmark of Serial printA. Execs.: ");
+	Serial.print(BENCHMARK_SERIAL);
+	Serial.print(" time elapsed -> ");
+	Serial.print(elapsed);
+	Serial.println(" us");
+
+}
+
+void benchSerialAll() {
+
+	benchSerialPrint();
+
+	delay(1000); // To give time to send any buffered
+
+	benchSerialDebug();
+
+	delay(1000); // To give time to send any buffered
+
+	benchSerialDbgPr();
 }
 
 // Example functions with argument (only 1) to call from serial monitor

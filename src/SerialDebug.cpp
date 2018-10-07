@@ -7,6 +7,8 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.5	2018-10-07		New print macros
+ *							Optimization on debugPrintf logic
  * 0.9.4    2018-10-04		Now debugger starts disabled
  * 0.9.3	2018-10-01   	Few adjustments
  * 0.9.2	2018-08-28    	Few adjustments
@@ -31,7 +33,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * This file contains the code for SerialDebug.
+ * This file contains the code for SerialDebug library.
  *
  */
 
@@ -105,7 +107,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.4")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.5")                   	// Version of this library
 
 // Low memory board ?
 
@@ -144,6 +146,8 @@ boolean _debugWatchesEnabled = false;				// Watches is enabled (only after add a
 boolean _debugDebuggerEnabled = false;				// Simple Software Debugger enabled ?
 
 #endif // DEBUG_DISABLE_DEBUGGER
+
+boolean _debugPrintIsNewline = true;				// Used in print macros
 
 /////// Variables - private
 
@@ -530,8 +534,8 @@ static void debugSerialAppConnection(boolean versionPro);
 
 // Debug internal, all must commented on release
 
-#define D(fmt, ...)
-//#define D(fmt, ...) PRINTF("$dbg: " fmt "\r\n", ##__VA_ARGS__)
+//#define D(fmt, ...)
+#define D(fmt, ...) PRINTF("$dbg: " fmt "\r\n", ##__VA_ARGS__)
 
 /////// Methods 
 
@@ -713,7 +717,7 @@ void debugHandleEvent(boolean calledByHandleEvent) {
 
 		// Handle the debugger (globals and watches)
 
-		if (_debugGlobalsAdded > 0 && !_debugSilence) { // TODO: silence ??
+		if (_debugDebuggerEnabled &&  _debugGlobalsAdded > 0 && !_debugSilence) { // TODO: silence ??
 
 			debugHandleDebugger(calledByHandleEvent);
 		}
@@ -770,6 +774,14 @@ void debugSetLevel(uint8_t level) {
 
 		debugSilence(false, false);
 	}
+}
+
+// Profiler
+
+void debugSetProfiler(boolean activate) {
+
+	_debugShowProfiler = activate;
+
 }
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
@@ -842,6 +854,72 @@ void debugSilence(boolean activate, boolean showMessage, boolean fromBreak) {
 	}
 }
 
+// Show debug info - in begin of line
+// Using String to concat, in tests, optimize only about 2%, due it not used
+
+void debugPrintInfo(const char level, const char* function) {
+
+	// Show level
+
+	Serial.print('(');
+	Serial.print(level);
+	Serial.print(' ');
+
+	// Show time / profiler
+
+	uint32_t time = 0;
+
+	if (_debugShowProfiler) {
+
+		time = (millis() - _debugLastTime);
+
+		Serial.print("p:^");
+
+		if (time < 10) { // Simple formatter, to not use printf
+			Serial.print("000");
+		} else if (time < 100) {
+			Serial.print("00");
+		} else if (time < 1000) {
+			Serial.print('0');
+		}
+		Serial.print(time);
+
+	} else {
+
+		Serial.print(millis());
+	}
+
+	Serial.print(')');
+
+	_debugLastTime = millis();
+
+	// Show function
+
+#ifndef DEBUG_AUTO_FUNC_DISABLED
+
+	if (function) { // Auto function
+
+		Serial.print('(');
+		Serial.print(function);
+		Serial.print(')');
+
+	}
+#endif
+
+	// Show Core Id ?
+
+#ifdef DEBUG_CORE
+
+	Serial.print("(C");
+	Serial.print(xPortGetCoreID());
+	Serial.print(')');
+
+#endif
+
+	Serial.print(' ');
+
+}
+
 // Debug printf (used for not Espressif boards (that have it) or to use flash strings
 // Based on Arduino Espressif Print.printf (thanks a lot)
 
@@ -862,41 +940,46 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 
 	if (level != ' ') { // ' ' is used internally in SerialDebug to do printf, if Arduino no have, or for flash F support
 
-#ifndef DEBUG_AUTO_FUNC_DISABLED
-		if (function) { // Auto function
+//#ifndef DEBUG_AUTO_FUNC_DISABLED
+//		if (function) { // Auto function
+//
+//			if (_debugShowProfiler) {
+//				snprintf(buffer, bufSize,
+//						"(%c p:^%04lu) (%s) ",
+//						level, (millis() - _debugLastTime),
+//						function);
+//				_debugLastTime = millis();
+//			} else {
+//				snprintf(buffer, bufSize,
+//						"(%c) (%lu) (%s) ",
+//						level, millis(),
+//						function);
+//			}
+//
+//		}
+//
+//#else // No auto function
+//
+//		if (_debugShowProfiler) {
+//			snprintf(buffer, bufSize,
+//					"(%c p:^%04lu)",
+//					level, (millis() - _debugLastTime));
+//			_debugLastTime = millis();
+//		} else {
+//			snprintf(buffer, bufSize,
+//					"(%c) (%lu)",
+//					level, millis());
+//		}
+//#endif
+//
+//		// Send it to serial
+//
+//		Serial.print(buffer);
 
-			if (_debugShowProfiler) {
-				snprintf(buffer, bufSize,
-						"(%c p:^%04lu) (%s) ",
-						level, (millis() - _debugLastTime),
-						function);
-				_debugLastTime = millis();
-			} else {
-				snprintf(buffer, bufSize,
-						"(%c) (%lu) (%s) ",
-						level, millis(),
-						function);
-			}
+		// Now using a any prints, to avoid one printf
 
-		}
+		debugPrintInfo(level, function);
 
-#else // No auto function
-
-		if (_debugShowProfiler) {
-			snprintf(buffer, bufSize,
-					"(%c p:^%04lu)",
-					level, (millis() - _debugLastTime));
-			_debugLastTime = millis();
-		} else {
-			snprintf(buffer, bufSize,
-					"(%c) (%lu)",
-					level, millis());
-		}
-#endif
-
-		// Send it to serial
-
-		Serial.print(buffer);
 	}
 
 	// Process the var arg to process the custom format
@@ -957,42 +1040,47 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 
 	if (level != ' ') { // ' ' is used internally in SerialDebug to do printf, if Arduino no have, or for flash F support
 
-#ifndef DEBUG_AUTO_FUNC_DISABLED
-		if (function) { // Auto function
+//#ifndef DEBUG_AUTO_FUNC_DISABLED
+//		if (function) { // Auto function
+//
+//			if (_debugShowProfiler) {
+//				snprintf(buffer, bufSize,
+//						"(%c p:^%04lu) (%s) ",
+//						level, (millis() - _debugLastTime),
+//						function);
+//				_debugLastTime = millis();
+//			} else {
+//				snprintf(buffer, bufSize,
+//						"(%c) (%lu) (%s) ",
+//						level, millis(),
+//						function);
+//			}
+//
+//		}
+//
+//#else // No auto function
+//
+//		if (_debugShowProfiler) {
+//			snprintf(buffer, bufSize,
+//					"(%c p:^%04lu)",
+//					level, (millis() - _debugLastTime));
+//			_debugLastTime = millis();
+//		} else {
+//			snprintf(buffer, bufSize,
+//					"(%c) (%lu)",
+//					level, millis());
+//		}
+//#endif
+//
+//		// Send it to serial
+//
+//		Serial.print(buffer);
 
-			if (_debugShowProfiler) {
-				snprintf(buffer, bufSize,
-						"(%c p:^%04lu) (%s) ",
-						level, (millis() - _debugLastTime),
-						function);
-				_debugLastTime = millis();
-			} else {
-				snprintf(buffer, bufSize,
-						"(%c) (%lu) (%s) ",
-						level, millis(),
-						function);
-			}
+		// Now using a any prints, to avoid one printf
 
-		}
-
-#else // No auto function
-
-		if (_debugShowProfiler) {
-			snprintf(buffer, bufSize,
-					"(%c p:^%04lu)",
-					level, (millis() - _debugLastTime));
-			_debugLastTime = millis();
-		} else {
-			snprintf(buffer, bufSize,
-					"(%c) (%lu)",
-					level, millis());
-		}
-#endif
-
-		// Send it to serial
-
-		Serial.print(buffer);
+		debugPrintInfo(level, function);
 	}
+
 
 	// Process the var arg to process the custom format
 
@@ -1055,7 +1143,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 	// Inactive ?
 
-	if (!_debugActive) {
+	if (!_debugActive || !_debugDebuggerEnabled) {
 		return;
 	}
 
@@ -5130,7 +5218,7 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 #endif
 
-	D(F("Command: %s last: %s"), command.c_str(), _debugLastCommand.c_str());
+	//D(F("Command: %s last: %s"), command.c_str(), _debugLastCommand.c_str());
 
 	// Disable repeating
 
@@ -5312,9 +5400,12 @@ static void processCommand(String& command, boolean repeating, boolean showError
 			PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
 		}
 
+		printSerialDebug();
+		PRINTFLN(F("Simple software debugger: %s"), (_debugDebuggerEnabled) ? "On":"Off");
+
 #else
 		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
+		Serial.println(F("Debugger is not enabled in your project"));
 
 #endif
 	} else if (command == "f") {
@@ -5464,7 +5555,7 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 		// Connection with SerialDebugApp
 
-		D("pro -> %s", options.c_str());
+		D("$app -> %s", options.c_str());
 
 		debugSerialAppConnection((options == "Pro"));
 
@@ -6940,14 +7031,11 @@ static void debugSerialAppConnection(boolean versionPro) {
 
 #endif // BOARD_LOW_MEMORY
 
-		// Send status of debugger
-
-		PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
-
 		printSerialDebug();
 		PRINTFLN(F("End of sending."));
 
 	}
+
 #else
 
 	dbgEnabled = 'D';
@@ -6963,9 +7051,21 @@ static void debugSerialAppConnection(boolean versionPro) {
 
 	// Send status
 
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+	// Send status of debugger
+
+	PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+#endif
+
+	// Status of debug level
+
 	PRINTFLN(F("$app:L:%u"), _debugLevel);
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+	// Status of nonstop
+
 	PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
 #endif // BOARD_LOW_MEMORY
 

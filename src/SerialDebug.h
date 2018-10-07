@@ -158,8 +158,11 @@ String debugBreak();
 String debugBreak(String& str, uint32_t timeout = DEBUG_BREAK_TIMEOUT);
 String debugBreak(const __FlashStringHelper * str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
 String debugBreak(const char* str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
+
+void debugPrintInfo(const char level, const char* function);
+
+void debugSetProfiler(boolean active);
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
-	void debugSetProfiler(boolean active);
 	void debugShowProfiler(boolean activate, uint16_t minTime, boolean showMessage);
 #endif
 
@@ -364,6 +367,8 @@ extern bool _debugShowProfiler;					// Show profiler time ?
 extern uint16_t _debugMinTimeShowProfiler;		// Minimum time to show profiler
 extern unsigned long _debugLastTime; 			// Last time show a debug
 
+extern boolean _debugPrintIsNewline;			// Used in print macros
+
 #ifndef DEBUG_DISABLE_DEBUGGER
 extern uint8_t _debugFunctionsAdded;			// Number of functions added
 extern uint8_t _debugGlobalsAdded;				// Number of globals added
@@ -430,7 +435,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 							##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					Serial.printf("(%c) (%lu)(%s)(C%d) " fmt "\r\n", \
+					Serial.printf("(%c %lu)(%s)(C%d) " fmt "\r\n", \
 							level, millis(), \
 							__func__, xPortGetCoreID(), \
 							##__VA_ARGS__); \
@@ -450,7 +455,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 								##__VA_ARGS__); \
 						_debugLastTime = millis(); \
 					} else {\
-						ets_printf("ISR(%c) (%lu)(%s)(C%d) " fmt "\r\n", \
+						ets_printf("ISR(%c %lu)(%s)(C%d) " fmt "\r\n", \
 								level, millis(), \
 								__func__, xPortGetCoreID(), \
 								##__VA_ARGS__); \
@@ -471,7 +476,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 						##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					Serial.printf("(%c) (%lu)(C%d) " fmt "\r\n", \
+					Serial.printf("(%c %lu)(C%d) " fmt "\r\n", \
 						level, millis(), \
 						xPortGetCoreID(), \
 						##__VA_ARGS__); \
@@ -491,7 +496,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 								##__VA_ARGS__); \
 						_debugLastTime = millis(); \
 					} else {\
-						ets_printf("ISR(%c) (%lu)(C%d) " fmt "\r\n", \
+						ets_printf("ISR(%c %lu)(C%d) " fmt "\r\n", \
 							level, millis(), \
 							xPortGetCoreID(), \
 							##__VA_ARGS__); \
@@ -521,7 +526,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 						__func__, ##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					ets_printf("ISR(%c) (%lu)(%s) " fmt "\r\n", \
+					ets_printf("ISR(%c %lu)(%s) " fmt "\r\n", \
 						level, millis(), \
 						__func__, ##__VA_ARGS__); \
 				} \
@@ -538,7 +543,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 						##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					ets_printf("ISR(%c) (%lu)" fmt "\r\n", \
+					ets_printf("ISR(%c %lu)" fmt "\r\n", \
 						level, millis(), \
 						##__VA_ARGS__); \
 				} \
@@ -564,7 +569,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 					##__VA_ARGS__); \
 				_debugLastTime = millis(); \
 			} else {\
-				Serial.printf("(%c) (%lu)(%s) " fmt "\r\n", \
+				Serial.printf("(%c %lu)(%s) " fmt "\r\n", \
 					level, millis(), \
 					__func__, \
 					##__VA_ARGS__); \
@@ -581,7 +586,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 					##__VA_ARGS__); \
 				_debugLastTime = millis(); \
 			} else {\
-				Serial.printf("(%c) (%lu)" fmt "\r\n", \
+				Serial.printf("(%c %lu)" fmt "\r\n", \
 					level, millis(), \
 					##__VA_ARGS__); \
 			} \
@@ -680,6 +685,71 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 #endif // _debugIsr
 
 #endif // DEBUG_DISABLED
+
+// New macros for debug - print macros (to not use printf and to easy to migrate)
+
+#ifndef DEBUG_AUTO_FUNC_DISABLED
+
+	#define printLevel(level, x) { \
+		if (_debugPrintIsNewline) { \
+			debugPrintInfo(level, __func__); \
+			_debugPrintIsNewline = false; \
+		} \
+		Serial.print(x); \
+	}
+
+	#define printlnLevel(level, x) { \
+		if (_debugPrintIsNewline) { \
+			debugPrintInfo(level, __func__); \
+		} \
+		Serial.println(x); \
+		_debugPrintIsNewline = true; \
+	}
+
+
+#else
+
+	#define printLevel(level, x) { \
+		if (_debugPrintIsNewline) { \
+			debugPrintInfo(level, 0); \
+			_debugPrintIsNewline = false; \
+		} \
+		Serial.print(x); \
+	}
+
+	#define printlnLevel(level, x) { \
+		if (_debugPrintIsNewline) { \
+			debugPrintInfo(level, 0); \
+		} \
+		Serial.println(x); \
+		_debugPrintIsNewline = true; \
+	}
+
+#endif // DEBUG_AUTO_FUNC_DISABLED
+
+// Always
+
+#define printA(x) if (!_debugSilence)									 		printLevel('A', x)
+#define printlnA(x) if (!_debugSilence)									 		printlnLevel('A', x)
+
+// With level
+
+#define printV(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_VERBOSE) 	printLevel('V', x)
+#define printD(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_DEBUG) 		printLevel('D', x)
+#define printI(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_INFO) 		printLevel('I', x)
+#define printW(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_WARN) 		printLevel('W', x)
+
+#define printlnV(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_VERBOSE) 	printlnLevel('V', x)
+#define printlnD(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_DEBUG) 	printlnLevel('D', x)
+#define printlnI(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_INFO) 		printlnLevel('I', x)
+#define printlnW(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_WARN) 		printlnLevel('W', x)
+
+// For errors (always showed)
+
+#define printE(x) if (!_debugSilence) 											printLevel('E', x)
+#define printlnE(x) if (!_debugSilence) 										printlnLevel('E', x)
+
+// Debugger disabled ?
 
 #ifdef DEBUG_DISABLE_DEBUGGER
 

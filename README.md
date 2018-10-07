@@ -1,7 +1,8 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.4-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.5-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
+[![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
 Improved serial debugging to Arduino, with simple software debugger,
 to see/change global variables, to add watch for these variables,
@@ -61,167 +62,264 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
 - This is __optimized__ for features that it have
 
-        The initial status of SerialDebug is inactive,
-        where no normal debug outputs, and no CPU waste time for debugs.
-        Well, there may not be anyone seeing it.
-        It is good for not always USB connected project,
-        as one powered by battery or external power supply.
+  The initial status of __SerialDebug__ is inactive,
+  where no normal debug outputs, and no CPU waste time for debugs.
+  Well, there may not be anyone seeing it.
+  It is good for not always USB connected project,
+  as one powered by battery or external power supply.
 
-        Only messages that are processed and displayed,
-        are of type Error or Always (important ones).
+  Only messages that are processed and displayed,
+  are of type Error or Always (important ones).
 
-        After first command received, SerialDebug will become active
+  After first command received, __SerialDebug__ will become active
 
-        For boards with Serial.printf native, as ESP8266 and ESP32,
-        all routines to show debug is a C/C++ precompiler macros, 
-        so no extra functions calls, only Serial.print*. 
+  All routines to show debug is a C/C++ precompiler macros,
+  so no extra functions calls, only Serial.print*
+  Exception when use printf formatter, for boards that
+  no have it native.
 
-        For simple software debugger, have memory optimizations:
+  For simple software debugger, have memory optimizations:
 
-          - No fixed arrays, is used C++ Vector to dynamic arrays
+  - No fixed arrays, is used C++ Vector to dynamic arrays
 
-          - Is used void* pointer to store values, when it is need.
-            Is more complicate, but it dramatically reduces use of memory, 
-            compared to store 17 variables for support 17 kinds of this.
+  - Is used void* pointer to store values, when it is need.
+    Is more complicate, but it dramatically reduces use of memory, 
+    compared to store 17 variables for support 17 kinds of this.
 
-        Note: due a extra overhead in processing simple software debugger,
-              it starts disable. You can enable when you need (dbg command)
+  Note: due a extra overhead in processing simple software debugger,
+        it starts disabled. You can enable when you need (dbg command)
 
-        In future versions will more otimized, for CPU and memory
+  Now (>= 0.9.5) __SerialDebug__ have a new performance,
+  compared with standard print, no difference for __print*__ macros 
+  and about slower only 1% with __debug*__ macros (due printf processing).
+  Boards tested: Uno, Mega, Due, Esp8266 and Esp32.
+
+  To reproduce it, just upload the advanced example,
+  and call function 8 (just command: f 8) to run all benchmarks of serial.
+
+  In future versions will more otimized, for CPU and memory
 
 - It is good for __any__ Arduino
 
-        Is good for new boards, that have good CPU and memory,
-        like Espressif (ESP8266 and ESP32) and ARM arch (Due, Teensy, etc.).
+  Is good for new boards, that have good CPU and memory,
+  like Espressif (ESP8266 and ESP32) and ARM arch (Due, Teensy, etc.).
 
-        But it runs in older Arduino, as UNO, Leonardo, Mega, ...
-        In UNO or similar some features as Watches in debugger is not implemented,
-        due full library is huge for it (more than 5k lines of code, without comments).
-        For the Mega, some features are reduced, but have watches.
+  But it runs in older Arduino, as UNO, Leonardo, Mega, ...
 
-        If debugger is disabled, SerialDebug in UNO,
-        consumes only about 150 bytes of memory.
-        And it not fully otimized yet.
+  In UNO or similar (e.g. Leonardo),
+  some features as Watches in debugger is not implemented,
+  due full library is huge for it (more than 5k lines of code, without comments).
 
-        The default speed of serial is 250000, for Espressif, ARM or Mega boards
-        and 115200 for UNO, Leonardo, etc.
+  For the Mega, some features are reduced, but have watches.
 
-        Only exception is boards with Tiny* AVR MCU, 
-        due it not have CPU and memory to this library.
+  If debugger is disabled in code, __SerialDebug__ in UNO,
+  consumes only about 150 bytes of memory.
+  And it not fully otimized yet.
+
+  The default speed of serial is 250000, for Espressif, ARM or Mega boards
+  and 115200 for UNO, Leonardo, etc.
+
+  Only exception is boards with Tiny* AVR MCU, 
+  due it not have CPU and memory to this library.
 
 - Have __debug levels__
 
-        During the development, we can put a lot of debug messages...
+  During the development, we can put a lot of debug messages...
 
-        But with SerialDebug, we can put a level in each one.
+  But with __SerialDebug__, we can put a level in each one.
 
-        For all messages (except any (debug\*A) or error (debug\*E)),
-        the message only is processed and showed,
-        if debug level is equal or higher than it level
+  For all messages (except any (debug\*A) or error (debug\*E)),
+  the message only is processed and showed,
+  if debug level is equal or higher than it level
 
-        SerialDebug have 7 debug levels, in order of priority:
+  __SerialDebug__ have 7 debug levels, in order of priority:
 
-          Alway showed:
-              Error:    Critical errors
-              Always:   Important messages
+  - Alway showed:
 
-          No debug:
-              None:     No debug output
+    - __Error__:    Critical errors
+    - __Always__:   Important messages
 
-          Another levels (showed if level is equal or higher that actual one):
-              Warning:  Error conditions but not critical
-              Info:     Information messages
-              Debug:    Extra information
-              Verbose:  More information than the usual  
+  - No debug:
 
-        So We can change the level to Verbose, to see all messages.
-        Or to Debug to see only debug or higher level, etc.
+    - __None__:     No debug output
 
-        Is very good to reduce a quantity of messages that a project can generate,
-        in serial monitor.
+  - Another levels (showed if level is equal or higher that actual one):
+
+    - __Warning__:  Error conditions but not critical
+    - __Info__:     Information messages
+    - __Debug__:    Extra information
+    - __Verbose__:  More information than the usual  
+
+  So We can change the level to Verbose, to see all messages.
+  Or to Debug to see only debug or higher level, etc.
+
+  Is very good to reduce a quantity of messages that a project can generate,
+  in serial monitor.
+
+- It is __easy__ to migrate
+
+  From the 0.9.5 version, SerialDebug have a new macros to help migrate more easy
+
+  For example: the code extracted from [www.ladyada.net](http://www.ladyada.net/learn/arduino/lesson4.html):
+
+  ```cpp
+  Serial.println("Here is some math: ");
+
+  Serial.print("a = ");
+  Serial.println(a);
+  Serial.print("b = ");
+  Serial.println(b);
+  Serial.print("c = ");
+  Serial.println(c);
+
+  Serial.print("a + b = ");       // add
+  Serial.println(a + b);
+
+  Serial.print("a * c = ");       // multiply
+  Serial.println(a * c);
+
+  Serial.print("c / b = ");       // divide
+  Serial.println(c / b);
+
+  Serial.print("b - c = ");       // subtract
+  Serial.println(b - c);
+  ```
+
+  Only replace __Serial.println__ to __printlnD__
+  and replace __Serial.print__ to __printD__
+  Note: this order of replaces is important.
+  Note: D is to debug level, can be another, as V to verbose
+
+  ```cpp
+  printlnD("Here is some math: ");
+
+  printD("a = ");
+  printlnD(a);
+  printD("b = ");
+  printlnD(b);
+  printD("c = ");
+  printlnD(c);
+
+  printD("a + b = ");       // add
+  printlnD(a + b);
+
+  printD("a * c = ");       // multiply
+  printlnD(a * c);
+
+  printD("c / b = ");       // divide
+  printlnD(c / b);
+
+  printD("b - c = ");       // subtract
+  printlnD(b - c);
+  ```
+
+  In future we will have a converter to migrate old codes to __SerialDebug__
 
 - Have __printf__ support to serial
 
-        Regardless of whether the board has it native or not.
-        That I know, only Espressif boards have it native
+  Regardless of whether the board has it native or not.
+  That I know, only Espressif boards have it native
 
-        For example:
+  For example:
 
-          	Serial.print("*** Example - varA = ");
-            Serial.print(varA);
-            Serial.print(" varB =  ");
-            Serial.print(varB);
-            Serial.print(" varC =  ");
-            Serial.print(varC);
-            Serial.println(); 
+  ```cpp
+    Serial.print("*** Example - varA = ");
+    Serial.print(varA);
+    Serial.print(" varB =  ");
+    Serial.print(varB);
+    Serial.print(" varC =  ");
+    Serial.print(varC);
+    Serial.println(); 
+  ```
+  Can be converted to a single command:
 
-        Can be converted to a single command:
+  ```cpp
+  debugD("*** Example - varA = %d varB = %d varC = %d", varA, varB, varC);
+  ````
 
-            debugD("*** Example - varA = %d varB = %d varC = %d", varA, varB, varC);
+  Improving the example of previous topic, w/ debug with printf formatter:
 
-        In future we will have a converter to migrate old codes to __SerialDebug__
+  ```cpp
+  debugD("Here is some math: ");
 
-        Note: __SerialDebug__ follows the same concept, 
-        that modern debug/logging messages model,
-        as ESP-IDF, Android, iOS, etc.
-        In these, each call generates a formatted output line.
+  debugD("a = %d", a);
+  debugD("b = %d", b);
+  debugD("c = %d", c);
+
+  debugD("a + b = %d", (a + b)); // add
+  debugD("a * c = %d", (a * c)); // multiply
+  debugD("c / b = %d", (c / b)); // divide
+  debugD("b - c = %d", (b - c)); // subtract
+  ```
+  Note: 50% less code
+
+  Note: With __debug*__ macros, __SerialDebug__ follows the same concept, 
+  that modern debug/logging messages model,
+  as ESP-IDF, Android, iOS, etc.
+  In these, each call generates a formatted output line.
 
 - Have __auto__ function name and simple __profiler__
 
-        A simple debug:
+  A simple debug:
 
-          debugV("* Run time: %02u:%02u:%02u (VERBOSE)", mRunHours, mRunMinutes, mRunSeconds);
+  ```cpp
+  debugV("* Run time: %02u:%02u:%02u (VERBOSE)", mRunHours, mRunMinutes, mRunSeconds);
+  ````
 
-        Can generate this output in serial monitor:
+  Can generate this output in serial monitor:
 
-          (V p:^3065)(loop)(C1) * Run time: 00:41:23 (VERBOSE)
+  ```txt
+  (V p:^3065)(loop)(C1) * Run time: 00:41:23 (VERBOSE)
+  ```
 
-        Where:  V: is the level
-                p: is a profiler time, elased, between this and previous debug
-                (loop): is a function name, that executed this debug
-                (C1): is a core that executed this debug (and a function of this) (only for ESP32)
-                The remaining is the message formatted (printf)
+    Where:  V: is the level
+            p: is a profiler time, elased, between this and previous debug
+            (loop): is a function name, that executed this debug
+            (C1): is a core that executed this debug (and a function of this) (only for ESP32)
+            The remaining is the message formatted (printf)
 
-        Note how printf is powerfull, %02u means a unsigned integer with minimum lenght of 2,
-        and leading by zeros
+  Note how __printf__ is powerfull, %02u means a unsigned integer with minimum lenght of 2,
+  and leading by zeros
 
-        For ESP32, the core id in each debug is very good to optimizer multicore programming.
+  For ESP32, the core id in each debug is very good to optimizer multicore programming.
 
 - Have __commands__ to execute from serial monitor
 
-        __SerialDebug__ takes care of inputs from serial, and process predefined commands
+  __SerialDebug__ takes care of inputs from serial, and process predefined commands
 
-        For example:
+  For example:
 
-           Change the level of debug, to show less or more messages.
-           See memory
-           Reset the board
+  - Show help (__?__)
+  - Change the level of debug (__v__,__d__,__i__,__w__,__e__,__n__),
+    to show less or more messages.
+  - See memory (__m__)
+  - Reset the board (__reset__)
 
-        See about __SerialDebug__ commands below.
+    See about __SerialDebug__ commands below.
 
 - Have a simple __software debugger__ 
 
-        If enabled, you can command in serial monitor:
+  If enabled, you can command in serial monitor:
 
-          - Show and change values of global variables
-          - Call a function
-          - Add or change watches for global variables
+  - Show and change values of global variables
+  - Call a function
+  - Add or change watches for global variables
 
-        It not have some features than a real hardware debugger,
-        but is good features, for when yet have none of this ...
-        It is for when not have a real hardware debugger, 
-        e.g. GDB w/ JTAG, or not have skill on it.
+  It not have some features than a real hardware debugger,
+  but is good features, for when yet have none of this ...
+  It is for when not have a real hardware debugger, 
+  e.g. GDB w/ JTAG, or not have skill on it.
 
-        It can be disabled, if not want it.
+  It can be disabled, if not want it.
 
-        See about this below.
+  See about this below.
 
 - Ready for __production__ (release compiler))
 
-        For release your device, just uncomment DEBUG_DISABLED in your project
-        Done this, and no more serial messages, or debug things. A
-        And better for DEBUG_DISABLED, __SerialDebug__ have ZERO overhead, 
-        due is nothing of this is compiled
+    For release your device, just uncomment DEBUG_DISABLED in your project
+    Done this, and no more serial messages, or debug things. A
+    And better for DEBUG_DISABLED, __SerialDebug__ have ZERO overhead, 
+    due is nothing of this is compiled
 
 ## How it looks
 
@@ -302,18 +400,20 @@ For simple software debugger:
 Notes:
 
 - watches is not for low memory boards, as Uno.
-- memory and reset, yet implemented only to AVR, Espressif, Teensy, and Arm (in test).
+- memory and reset, yet implemented only to AVR, Espressif, Teensy, and ARM arch (e.g. Arduino Due).
   
 ## Install
 
 Just download or clone this repository.
 
-For install help, please see: https://www.arduino.cc/en/Guide/Libraries
+For install help, please see: [https://www.arduino.cc/en/Guide/Libraries](https://www.arduino.cc/en/Guide/Libraries)
 
 Note: In some boards, after upload if you see only dirty characteres in serial monitor,
 please reset the board. There is possibly some glitch in the serial monitor of Arduino
 
 ## Usage
+
+### examples
 
     Please open the examples to see it working:
 
@@ -326,23 +426,24 @@ please reset the board. There is possibly some glitch in the serial monitor of A
 
       - Disabled -> example of how disable features, or entire SerialDebug
 
+To add __SerialDebug__ to your Arduino project:
+
 ### include
 
 Place it, in top of code:
 
-`````cpp
+```cpp
 #include "SerialDebug.h" //https://github.com/JoaoLopesF/SerialDebug
-
 ```
 
 ### setup
 
-    Setup code is only necessary for debugger elements.
-    As this library not uses a hardware debugger,
-    this codes are necessary to add this elements,
-    into "simple software debugger" of SerialDebug. 
+  Setup code is only necessary for __debugger__ elements.
+  As this library not uses a hardware debugger,
+  this codes are necessary to add this elements,
+  into "simple software debugger" of SerialDebug. 
 
-For example, for functions:
+For example, for __functions__:
 
 ```cpp
 // Add functions that can called from SerialDebug
@@ -406,7 +507,7 @@ debugAddFunctionVoid(F("benchInt"), &benchInt);
 
 Notes: It is too for all examples showed below
 
-- For global variables (note: only global ones):
+For __global variables__ (note: only global ones):
 
 ```cpp
 
@@ -425,17 +526,17 @@ if (debugAddGlobalUInt8_t("mRunHours", &mRunHours) >= 0) {
 
 // Note: easy way, no descriptions ....
 
-debugAddGlobalBoolean("mBoolean", 	&mBoolean);
-debugAddGlobalChar("mChar", 		&mChar);
-debugAddGlobalByte("mByte", 		&mByte);
-debugAddGlobalInt("mInt", 			&mInt);
-debugAddGlobalUInt("mUInt", 		&mUInt);
-debugAddGlobalLong("mLong", 		&mLong);
-debugAddGlobalULong("mULong", 		&mULong);
-debugAddGlobalFloat("mFloat", 		&mFloat);
-debugAddGlobalDouble("mDouble", 	&mDouble);
+debugAddGlobalBoolean("mBoolean", &mBoolean);
+debugAddGlobalChar("mChar",       &mChar);
+debugAddGlobalByte("mByte",       &mByte);
+debugAddGlobalInt("mInt",         &mInt);
+debugAddGlobalUInt("mUInt",       &mUInt);
+debugAddGlobalLong("mLong",       &mLong);
+debugAddGlobalULong("mULong",     &mULong);
+debugAddGlobalFloat("mFloat",     &mFloat);
+debugAddGlobalDouble("mDouble",   &mDouble);
 
-debugAddGlobalString("mString", 	&mString);
+debugAddGlobalString("mString",   &mString);
 
 // Note: For char arrays, not use the '&'
 
@@ -452,15 +553,16 @@ debugAddGlobalCharArray("mCharArrayLarge",
 // Notes: Is good added arrays in last order, to help see another variables
 //        In next versions, we can have a helper to do it in one command
 
-debugAddGlobalInt("mIntArray[0]", 	&mIntArray[0]);
-debugAddGlobalInt("mIntArray[1]", 	&mIntArray[1]);
-debugAddGlobalInt("mIntArray[2]", 	&mIntArray[2]);
-debugAddGlobalInt("mIntArray[3]",	&mIntArray[3]);
-debugAddGlobalInt("mIntArray[4]",	&mIntArray[4]);
+debugAddGlobalInt("mIntArray[0]", &mIntArray[0]);
+debugAddGlobalInt("mIntArray[1]", &mIntArray[1]);
+debugAddGlobalInt("mIntArray[2]", &mIntArray[2]);
+debugAddGlobalInt("mIntArray[3]", &mIntArray[3]);
+debugAddGlobalInt("mIntArray[4]", &mIntArray[4]);
 
 ```
+In future, we can have a converter that read code and generate this entries.
 
-And for watches (not for low memory boards, as UNO):
+And for __watches__ (not for low memory boards, as UNO):
 
 ```cpp
 // Add watches for some global variables
@@ -499,7 +601,13 @@ debugHandle();
 
 ### How use __SerialDebug__ macros
 
-Instead _Serial.print*_, use __debug*__ macros:
+Instead _Serial.print*_, use __print*__ or __debug*__ macros:
+
+  __print*__: easy to migrate and use, just replace each Serial.print for this
+
+  __println*__: same, but add a new line on output
+
+  __debug*__: w/ powerfull printf formatter, one command generate one serial line
 
 See example of how convert it, in [Benefits](#benefits) topic below.
 
@@ -509,12 +617,20 @@ Using macros to show debug:
 
 ``` cpp
 debugA("**** Setup: initialized.");
+
+// or
+
+printlnA("**** Setup: initialized.");
 ```
 
 - For errors:
 
 ```cpp
 debugE("* This is a message of debug level ERROR");
+
+// or
+
+printlnE("* This is a message of debug level ERROR");
 ```
 
 - For another levels:
@@ -524,9 +640,17 @@ debugV("* This is a message of debug level VERBOSE");
 debugD("* This is a message of debug level DEBUG");
 debugI("* This is a message of debug level INFO");
 debugW("* This is a message of debug level WARNING");
+
+// or
+
+printlnV("* This is a message of debug level VERBOSE");
+printlnD("* This is a message of debug level DEBUG");
+printlnI("* This is a message of debug level INFO");
+printlnW("* This is a message of debug level WARNING");
+
 ```
 
-### printf formatting
+### printf formatting (for __debug*__ macros)
 
 __SerialDebug__ use prinf native (for Espressif boards), 
 or implements it in _depugPrintf_ function.
@@ -548,28 +672,42 @@ Notes:
 
 - __SeriaDebug__ use the standard printf of Arduino
 
-  - Some features can be not implemented, depending of board arch.
-
-  - For String variables, you must use the c_str() method:
+  For String variables, you must use the c_str() method:
 
 ```cpp
 debugA("*** called with arg.: %s", str.c_str());
+
+
 ```
 
-- For AVR MCUs, as UNO, Leonardo, Mega, etc.,
-    no have support to %f (format floats)
+For AVR MCUs, as UNO, Leonardo, Mega and Esp8266,
+no have support to %f (format floats)
 
-    If you need this, use: 
+If you need this, use:
 
 ```cpp
 #ifndef ARDUINO_ARCH_AVR // Native float printf support
   debugV("mFloat = %0.3f", mFloat);
-#else // For AVR, it is not supported, using String instead
+#else // For AVR and ESP8266, it is not supported, using String instead
   debugV("mFloat = %s", String(mFloat).c_str());
 #endif
-```
+````
 
-    (in future versions of __SerialDebug__, can be have a better solution)
+(in future versions of __SerialDebug__, can be have a better solution)
+
+Note: this is only for __debug*__ macros , thats uses printf
+
+For __print*_ macros, no need extra codes:
+
+```cpp
+
+printV("*** called with arg.: ");
+printlnV(str);
+
+printV("mFloat = ");
+printlnV(mFloat);
+
+```
 
 ## Watches
 
@@ -588,6 +726,11 @@ How this works, without a real hardware debugger? :
 This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
+
+### 0.9.5 - 2018-10-07
+
+    - New print macros
+    - Optimization on debugPrintf logic
 
 ### 0.9.4 - 2018-10-04
 

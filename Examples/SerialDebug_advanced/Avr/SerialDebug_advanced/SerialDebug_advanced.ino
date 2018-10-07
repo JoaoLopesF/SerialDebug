@@ -165,11 +165,17 @@ void setup() {
     	debugSetLastFunctionDescription(F("To run all benchmarks"));
     }
 
-    if (debugAddFunctionVoid(F("benchSerial"), &benchSerial) >= 0) {
+    if (debugAddFunctionVoid(F("benchSerialPrint"), &benchSerialPrint) >= 0) {
     	debugSetLastFunctionDescription(F("To benchmarks standard Serial debug"));
     }
     if (debugAddFunctionVoid(F("benchSerialDebug"), &benchSerialDebug) >= 0) {
     	debugSetLastFunctionDescription(F("To benchmarks SerialDebug"));
+    }
+    if (debugAddFunctionVoid(F("benchSerialDbgPr"), &benchSerialDbgPr) >= 0) {
+    	debugSetLastFunctionDescription(F("To benchmarks SerialDebug print macros"));
+    }
+    if (debugAddFunctionVoid(F("benchSerialAll"), &benchSerialAll) >= 0) {
+    	debugSetLastFunctionDescription(F("To benchmarks all Serial"));
     }
 
     if (debugAddFunctionStr(F("funcArgStr"),&funcArgStr) >= 0) {
@@ -294,6 +300,12 @@ void loop()
 #else // For AVR, it is not supported, using String instead
 		debugV(F("mFloat = %s"), String(mFloat).c_str());
 #endif
+
+		// New print macros for debug
+
+		printlnV(F("Test of print macro"));
+		printV(F("secs: "));
+		printlnV(mRunSeconds);
 
 	}
 
@@ -428,37 +440,37 @@ void benchAll() {
 
 }
 
-// Serial benchmarks, to see how much SerialDebub is fast or slow
+// Serial benchmarks, to compare Serial.prints with SerialDebug
 
-#define BENCHMARK_SERIAL 100
+// Note no using F() in loops, due it compare only speed of processing
 
-void benchSerial() {
+#define BENCHMARK_SERIAL 25
+
+void benchSerialPrint() {
 
 	// Note: Serial.printf is not used, due most Arduino not have this
+	// Same data size of SerialDebug to compare speeds of processing and not the time elapsed to send it
 
 	unsigned long timeBegin = micros();
 
 	for (uint16_t i = 0; i < BENCHMARK_SERIAL; i++) {
 
-
-		Serial.print(F("* "));
+		Serial.print("(A ");
 		Serial.print(millis());
-		Serial.print(F(" benchSerial: Exec.: "));
+		Serial.print(")(benchSerialPrint) Exec.: ");
 		Serial.print(i+1);
-		Serial.print(F(" of "));
+		Serial.print(" of ");
 		Serial.println(BENCHMARK_SERIAL);
 
 	}
 
 	unsigned long elapsed = (micros() - timeBegin);
 
-	// Note: Debug always is used here
-
-	Serial.print(F("*** Benchmark of Serial. Execs.: "));
+	Serial.print(F("*** Benchmark of Serial prints. Execs.: "));
 	Serial.print(BENCHMARK_SERIAL);
-	Serial.print(F("Time on each debug -> "));
-	Serial.print((elapsed / BENCHMARK_SERIAL));
-	Serial.println(" us");
+	Serial.print(F(" time elapsed -> "));
+	Serial.print(elapsed);
+	Serial.println(F(" us"));
 
 }
 
@@ -467,21 +479,75 @@ void benchSerialDebug() {
 	// Note: printf formats can be used, even if Arduino not have this,
 	// This is done in internal debugPrintf
 
+	debugSetProfiler(false); // Disable it, due standard prints not have it
+
 	unsigned long timeBegin = micros();
 
 	for (uint16_t i = 0; i < BENCHMARK_SERIAL; i++) {
 
-		debugA(F("* benchSerial: Exec.: %02u of %02u"), (i+1), BENCHMARK_SERIAL);
+		debugA("Exec.: %02u of %02u", (i+1), BENCHMARK_SERIAL);
 
 	}
 
 	unsigned long elapsed = (micros() - timeBegin);
 
-	// Note: Debug always is used here
+	debugSetProfiler(true); // Restore
 
-	debugA(F("*** Benchmark of Serial. Execs.: (%u) Time on each debug -> %lu us"), BENCHMARK_SERIAL, (elapsed / BENCHMARK_SERIAL));
+	// Note not using SerialDebug macros below, to show equals that SerialPrints
+
+	Serial.print(F("*** Benchmark of Serial debugA. Execs.: "));
+	Serial.print(BENCHMARK_SERIAL);
+	Serial.print(F(" time elapsed -> "));
+	Serial.print(elapsed);
+	Serial.println(F(" us"));
 
 }
+
+void benchSerialDbgPr() {
+
+	// Using print macros to avoid printf
+	// Same data size of SerialDebug to compare speeds of processing and not the time elapsed to send it
+
+	debugSetProfiler(false); // Disable it, due standard prints not have it
+
+	unsigned long timeBegin = micros();
+
+	for (uint16_t i = 0; i < BENCHMARK_SERIAL; i++) {
+
+		printA("Exec.: ");
+		printA(i+1);
+		printA(" of ");
+		printlnA(BENCHMARK_SERIAL);
+
+	}
+
+	unsigned long elapsed = (micros() - timeBegin);
+
+	debugSetProfiler(true); // Restore
+
+	// Note not using SerialDebug macros below, to show equals that SerialPrints
+
+	Serial.print(F("*** Benchmark of Serial printA. Execs.: "));
+	Serial.print(BENCHMARK_SERIAL);
+	Serial.print(F(" time elapsed -> "));
+	Serial.print(elapsed);
+	Serial.println(F(" us"));
+
+}
+
+void benchSerialAll() {
+
+	benchSerialPrint();
+
+	delay(1000); // To give time to send any buffered
+
+	benchSerialDebug();
+
+	delay(1000); // To give time to send any buffered
+
+	benchSerialDbgPr();
+}
+
 
 // Example functions with argument (only 1) to call from serial monitor
 // Note others types is not yet available in this version of SerialDebug
