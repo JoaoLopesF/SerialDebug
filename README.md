@@ -75,22 +75,23 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
   All routines to show debug is a C/C++ precompiler macros,
   so no extra functions calls, only Serial.print*
-  Exception when use printf formatter, for boards that
-  no have it native.
+
+  Except when use printf formatter (__debug*__ macros),
+  for boards that no have it native.
 
   For simple software debugger, have memory optimizations:
 
   - No fixed arrays, is used C++ Vector to dynamic arrays
 
   - Is used void* pointer to store values, when it is need.
-    Is more complicate, but it dramatically reduces use of memory, 
+    Is more complicate, but it dramatically reduces use of memory,
     compared to store 17 variables for support 17 kinds of this.
 
   Note: due a extra overhead in processing simple software debugger,
         it starts disabled. You can enable when you need (dbg command)
 
   Now (>= 0.9.5) __SerialDebug__ have a new performance,
-  compared with standard print, no difference for __print*__ macros 
+  compared with standard print, no difference for __print*__ macros
   and about slower only 1% with __debug*__ macros (due printf processing).
   Boards tested: Uno, Mega, Due, Esp8266 and Esp32.
 
@@ -213,7 +214,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   printlnD(b - c);
   ```
 
-  In future we will have a converter to migrate old codes to __SerialDebug__
+  In future we will have a converter to migrate existing code to __SerialDebug__
 
 - Have __printf__ support to serial
 
