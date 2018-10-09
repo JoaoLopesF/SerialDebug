@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.6 	2018-10-09		New debug format output
  * 0.9.5	2018-10-07		New print macros
  *							Optimization on debugPrintf logic
  * 0.9.4    2018-10-04		Now debugger starts disabled
@@ -107,7 +108,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.5")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.6")                   	// Version of this library
 
 // Low memory board ?
 
@@ -889,7 +890,7 @@ void debugPrintInfo(const char level, const char* function) {
 		Serial.print(millis());
 	}
 
-	Serial.print(')');
+	Serial.print(' ');
 
 	_debugLastTime = millis();
 
@@ -899,9 +900,8 @@ void debugPrintInfo(const char level, const char* function) {
 
 	if (function) { // Auto function
 
-		Serial.print('(');
 		Serial.print(function);
-		Serial.print(')');
+		Serial.print(' ');
 
 	}
 #endif
@@ -910,12 +910,13 @@ void debugPrintInfo(const char level, const char* function) {
 
 #ifdef DEBUG_CORE
 
-	Serial.print("(C");
+	Serial.print('C');
 	Serial.print(xPortGetCoreID());
-	Serial.print(')');
+	Serial.print(' ');
 
 #endif
 
+	Serial.print(')');
 	Serial.print(' ');
 
 }

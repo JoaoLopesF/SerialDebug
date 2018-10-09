@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.5-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.6-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -270,13 +270,13 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   Can generate this output in serial monitor:
 
   ```txt
-  (V p:^3065)(loop)(C1) * Run time: 00:41:23 (VERBOSE)
+  (V p:^3065 loop C1) * Run time: 00:41:23 (VERBOSE)
   ```
 
     Where:  V: is the level
             p: is a profiler time, elased, between this and previous debug
-            (loop): is a function name, that executed this debug
-            (C1): is a core that executed this debug (and a function of this) (only for ESP32)
+            loop: is a function name, that executed this debug
+            C1: is a core that executed this debug (and a function of this) (only for ESP32)
             The remaining is the message formatted (printf)
 
   Note how __printf__ is powerfull, %02u means a unsigned integer with minimum lenght of 2,
@@ -727,6 +727,10 @@ How this works, without a real hardware debugger? :
 This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
+
+### 0.9.6	- 2018-10-09
+
+    - New debug format output
 
 ### 0.9.5 - 2018-10-07
 

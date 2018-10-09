@@ -164,11 +164,11 @@ void setup() {
     if (debugAddFunctionVoid("benchSerialDebug", &benchSerialDebug) >= 0) {
     	debugSetLastFunctionDescription("To benchmarks SerialDebug");
     }
-    if (debugAddFunctionVoid(F("benchSerialDbgPr"), &benchSerialDbgPr) >= 0) {
-    	debugSetLastFunctionDescription(F("To benchmarks SerialDebug print macros"));
+    if (debugAddFunctionVoid("benchSerialDbgPr", &benchSerialDbgPr) >= 0) {
+    	debugSetLastFunctionDescription("To benchmarks SerialDebug print macros");
     }
-    if (debugAddFunctionVoid(F("benchSerialAll"), &benchSerialAll) >= 0) {
-    	debugSetLastFunctionDescription(F("To benchmarks all Serial"));
+    if (debugAddFunctionVoid("benchSerialAll", &benchSerialAll) >= 0) {
+    	debugSetLastFunctionDescription("To benchmarks all Serial");
     }
 
 
@@ -458,14 +458,12 @@ void benchSerialPrint() {
 
 		Serial.print("(A ");
 		Serial.print(millis());
+		Serial.print(" benchSerialPrint");
 #ifdef ESP32
-		Serial.print(")(C");
+		Serial.print(" C");
 		Serial.print(xPortGetCoreID());
-		Serial.print(")");
-#else
-		Serial.print(")");
 #endif
-		Serial.print(F("(benchSerialPrint) Exec.: "));
+		Serial.print(") Exec.: ");
 		Serial.print(i+1);
 		Serial.print(" of ");
 		Serial.println(BENCHMARK_SERIAL);

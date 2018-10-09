@@ -457,7 +457,7 @@ void benchSerialPrint() {
 
 		Serial.print("(A ");
 		Serial.print(millis());
-		Serial.print(")(benchSerialPrint) Exec.: ");
+		Serial.print(" benchSerialPrint) Exec.: ");
 		Serial.print(i+1);
 		Serial.print(" of ");
 		Serial.println(BENCHMARK_SERIAL);

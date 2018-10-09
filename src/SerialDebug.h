@@ -135,13 +135,13 @@ typedef enum {										// Type of operator
 // Timeout for debugBreak - put 0 if not want timeout
 
 #ifndef DEBUG_BREAK_TIMEOUT
-	#define DEBUG_BREAK_TIMEOUT 10000
+	#define DEBUG_BREAK_TIMEOUT 5000
 #endif
 
 // Timeout for watch triggered - put 0 if not want timeout
 
 #ifndef DEBUG_BREAK_WATCH
-	#define DEBUG_BREAK_WATCH 20000
+	#define DEBUG_BREAK_WATCH 10000
 #endif
 
 // Minimum time to process handle event
@@ -429,13 +429,13 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 			#define _debug(level, fmt, ...) { \
 				DEBUG_HANDLE_DEBUGGER() \
 				if (_debugShowProfiler) { \
-					Serial.printf("(%c p:^%04lu)(%s)(C%d) " fmt "\r\n", \
+					Serial.printf("(%c p:^%04lu %s C%d) " fmt "\r\n", \
 							level, (millis() - _debugLastTime), \
 							__func__, xPortGetCoreID(), \
 							##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					Serial.printf("(%c %lu)(%s)(C%d) " fmt "\r\n", \
+					Serial.printf("(%c %lu %s C%d) " fmt "\r\n", \
 							level, millis(), \
 							__func__, xPortGetCoreID(), \
 							##__VA_ARGS__); \
@@ -449,13 +449,13 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 			#define _debugIsr(level, fmt, ...) { \
 				if (_debugShowISR == 'Y') { \
 					if (_debugShowProfiler) { \
-						ets_printf("ISR(%c p:^%04lu)(%s)(C%d) " fmt "\r\n", \
+						ets_printf("ISR(%c p:^%04lu %s C%d) " fmt "\r\n", \
 								level, (millis() - _debugLastTime), \
 								__func__, xPortGetCoreID(), \
 								##__VA_ARGS__); \
 						_debugLastTime = millis(); \
 					} else {\
-						ets_printf("ISR(%c %lu)(%s)(C%d) " fmt "\r\n", \
+						ets_printf("ISR(%c %lu %s C%d) " fmt "\r\n", \
 								level, millis(), \
 								__func__, xPortGetCoreID(), \
 								##__VA_ARGS__); \
@@ -470,13 +470,13 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 			#define _debug(level, fmt, ...) { \
 				DEBUG_HANDLE_DEBUGGER() \
 				if (_debugShowProfiler) { \
-					Serial.printf("(%c p:^%04lu)(C%d) " fmt "\r\n", \
+					Serial.printf("(%c p:^%04lu C%d) " fmt "\r\n", \
 						level, (millis() - _debugLastTime), \
 						xPortGetCoreID(), \
 						##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					Serial.printf("(%c %lu)(C%d) " fmt "\r\n", \
+					Serial.printf("(%c %lu C%d) " fmt "\r\n", \
 						level, millis(), \
 						xPortGetCoreID(), \
 						##__VA_ARGS__); \
@@ -490,13 +490,13 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 			#define _debugIsr(level, fmt, ...) { \
 				if (_debugShowISR == 'Y') { \
 					if (_debugShowProfiler) { \
-						ets_printf("ISR(%c p:^%04lu)(C%d) " fmt "\r\n", \
+						ets_printf("ISR(%c p:^%04lu C%d) " fmt "\r\n", \
 								level, (millis() - _debugLastTime), \
 								xPortGetCoreID(), \
 								##__VA_ARGS__); \
 						_debugLastTime = millis(); \
 					} else {\
-						ets_printf("ISR(%c %lu)(C%d) " fmt "\r\n", \
+						ets_printf("ISR(%c %lu C%d) " fmt "\r\n", \
 							level, millis(), \
 							xPortGetCoreID(), \
 							##__VA_ARGS__); \
@@ -521,12 +521,12 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 		#define _debugIsr(level, fmt, ...) { \
 			if (_debugShowISR == 'Y') { \
 				if (_debugShowProfiler) { \
-					ets_printf("ISR(%c p:^%04lu)(%s) " fmt "\r\n", \
+					ets_printf("ISR(%c p:^%04lu %s) " fmt "\r\n", \
 						level, (millis() - _debugLastTime), \
 						__func__, ##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					ets_printf("ISR(%c %lu)(%s) " fmt "\r\n", \
+					ets_printf("ISR(%c %lu %s) " fmt "\r\n", \
 						level, millis(), \
 						__func__, ##__VA_ARGS__); \
 				} \
@@ -538,12 +538,12 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 		#define _debugIsr(level, fmt, ...) { \
 			if (_debugShowISR == 'Y') { \
 				if (_debugShowProfiler) { \
-					ets_printf("ISR(%c p:^%04lu)" fmt "\r\n", \
+					ets_printf("ISR(%c p:^%04lu) " fmt "\r\n", \
 						level, (millis() - _debugLastTime), \
 						##__VA_ARGS__); \
 					_debugLastTime = millis(); \
 				} else {\
-					ets_printf("ISR(%c %lu)" fmt "\r\n", \
+					ets_printf("ISR(%c %lu) " fmt "\r\n", \
 						level, millis(), \
 						##__VA_ARGS__); \
 				} \
@@ -563,13 +563,13 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 		#define _debug(level, fmt, ...) { \
 			DEBUG_HANDLE_DEBUGGER() \
 			if (_debugShowProfiler) { \
-				Serial.printf("(%c p:^%04lu)(%s) " fmt "\r\n", \
+				Serial.printf("(%c p:^%04lu %s) " fmt "\r\n", \
 					level, (millis() - _debugLastTime), \
 					__func__, \
 					##__VA_ARGS__); \
 				_debugLastTime = millis(); \
 			} else {\
-				Serial.printf("(%c %lu)(%s) " fmt "\r\n", \
+				Serial.printf("(%c %lu %s) " fmt "\r\n", \
 					level, millis(), \
 					__func__, \
 					##__VA_ARGS__); \
@@ -581,12 +581,12 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 		#define _debug(level, fmt, ...) { \
 			DEBUG_HANDLE_DEBUGGER() \
 			if (_debugShowProfiler) { \
-				Serial.printf("(%c p:^%04lu)" fmt "\r\n", \
+				Serial.printf("(%c p:^%04lu) " fmt "\r\n", \
 					level, (millis() - _debugLastTime), \
 					##__VA_ARGS__); \
 				_debugLastTime = millis(); \
 			} else {\
-				Serial.printf("(%c %lu)" fmt "\r\n", \
+				Serial.printf("(%c %lu) " fmt "\r\n", \
 					level, millis(), \
 					##__VA_ARGS__); \
 			} \
