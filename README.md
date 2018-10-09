@@ -273,11 +273,11 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   (V p:^3065 loop C1) * Run time: 00:41:23 (VERBOSE)
   ```
 
-    Where:  V: is the level
-            p: is a profiler time, elased, between this and previous debug
-            loop: is a function name, that executed this debug
-            C1: is a core that executed this debug (and a function of this) (only for ESP32)
-            The remaining is the message formatted (printf)
+        Where:  V: is the level
+                p: is a profiler time, elased, between this and previous debug
+                loop: is a function name, that executed this debug
+                C1: is a core that executed this debug (and a function of this) (only for ESP32)
+                The remaining is the message formatted (printf)
 
   Note how __printf__ is powerfull, %02u means a unsigned integer with minimum lenght of 2,
   and leading by zeros
