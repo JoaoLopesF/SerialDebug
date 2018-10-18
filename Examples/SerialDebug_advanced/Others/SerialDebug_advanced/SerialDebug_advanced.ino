@@ -24,10 +24,12 @@
 //       Not using F() to reduce memory,
 //       due these boards have memory a lot,
 //	     and RAM memory is much faster than Flash memory
-//       If want or need, please open the example in Directory Arduino.
+//       If want or need, please open the example in Directory Avr.
 ///////
 
 ////// Includes
+
+#include "Arduino.h"
 
 // SerialDebug Library
 
@@ -183,7 +185,7 @@ void setup() {
     }
 
     // Add global variables that can showed/changed from SerialDebug
-    // Note: Only globlal, if pass local for SerialDebug, can be dangerous
+    // Note: Only global, if pass local for SerialDebug, can be dangerous
 
     if (debugAddGlobalUInt8_t("mRunSeconds", &mRunSeconds) >= 0) {
     	debugSetLastGlobalDescription("Seconds of run time");

@@ -22,6 +22,8 @@
 
 ////// Includes
 
+#include "Arduino.h"
+
 // SerialDebug Library
 
 // Disable all debug ? Good to release builds (production)

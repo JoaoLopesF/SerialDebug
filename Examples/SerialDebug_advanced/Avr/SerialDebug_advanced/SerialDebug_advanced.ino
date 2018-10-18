@@ -23,6 +23,8 @@
 
 ////// Includes
 
+#include "Arduino.h"
+
 // SerialDebug Library
 
 // Disable all debug ? Good to release builds (production)
@@ -188,7 +190,7 @@ void setup() {
     	debugSetLastFunctionDescription(F("To run with Integer arg"));
     }
     // Add global variables that can showed/changed from SerialDebug
-    // Note: Only globlal, if pass local for SerialDebug, can be dangerous
+    // Note: Only global, if pass local for SerialDebug, can be dangerous
 
     if (debugAddGlobalInt(F("mRunSeconds"), &mRunSeconds) >= 0) {
     	debugSetLastGlobalDescription(F("Seconds of run time"));

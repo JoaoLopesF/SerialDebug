@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.6-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings) 
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.7-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -14,12 +14,13 @@ or call a function, in runtime, using serial monitor.
 - [Beta version](#beta-version)
 - [Github](#github)
 - [Benefits](#benefits)
+- [SerialDebugApp](#serialdebugapp)
 - [How it looks](#how-it-looks-1)
 - [Commands](#commands)
 - [Install](#install)
 - [Usage](#usage)
 - [Watches](#watches)
-- [Release](#releases)
+- [Releases](#releases)
 - [Links](#links)
 - [Thanks](#thanks)
 
@@ -46,12 +47,14 @@ It will be better documented before first RC version.
 
 ## Github
 
-Contribute to this libray development by creating an account on GitHub.
+Contribute to this library development by creating an account on GitHub.
 
 Please give a star, if you find this library usefull, 
 this help a another people, discover it too.
 
 Please add a issue for problems or suggestion.
+
+And please join in the Gitter chat room ([SerialDebug on Gitter](https://gitter.im/SerialDebug/Public)).
 
 I suggest you use a Github Desktop New app to clone, 
 it help to keep updated.
@@ -214,7 +217,10 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   printlnD(b - c);
   ```
 
-  In future we will have a converter to migrate existing code to __SerialDebug__
+  __SerialDebug__ has a converter to help migrate your Arduino codes,
+  from Serial.prints to this library.
+
+  [SerialDebugConverter](https://github.com/JoaoLopesF/SerialDebugConverter)
 
 - Have __printf__ support to serial
 
@@ -300,7 +306,9 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
 - Have a simple __software debugger__ 
 
-  If enabled, you can command in serial monitor:
+  This starts disabled, to avoid extra overhead.
+
+  If enabled (dbg command), you can command in serial monitor:
 
   - Show and change values of global variables
   - Call a function
@@ -311,7 +319,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   It is for when not have a real hardware debugger, 
   e.g. GDB w/ JTAG, or not have skill on it.
 
-  It can be disabled, if not want it.
+  It can be disabled (no compile), if not want it.
 
   See about this below.
 
@@ -322,9 +330,33 @@ __SerialDebug__ is bether than Arduino default serial debugging:
     And better for DEBUG_DISABLED, __SerialDebug__ have ZERO overhead, 
     due is nothing of this is compiled
 
+## SerialDebugApp
+
+__SerialDebugApp__ is a freeware desktop app, companion for this library.
+
+Note: this library is not depending on this software,
+you can use default serial monitor of Arduino IDE,
+or another program.
+
+__SerialDebugApp__ is a serial monitor, made for this library:
+
+- Show debug messages with different colors, depending on each level.
+
+- Have buttons to most of commands of __SerialDebug__
+
+- And more, filter, converter, auto-disconnection, etc.
+
+__SerialDebugApp__ page: [SerialDebugApp](https://github.com/JoaoLopesF/SerialDebug/tree/master/SerialDebugApp)
+
 ## How it looks
 
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/EfvF55Ww-lU/0.jpg)](https://www.youtube.com/watch?v=EfvF55Ww-lU)
+__SerialDebug__ in Arduino serial monitor:
+
+[![Youtube](http://img.youtube.com/vi/EfvF55Ww-lU/0.jpg)](https://www.youtube.com/watch?v=EfvF55Ww-lU)
+
+__SerialDebug__ in __SerialDebugApp__:
+
+[![Youtube](https://img.youtube.com/vi/ba_eu06mkng/0.jpg)](https://www.youtube.com/watch?v=ba_eu06mkng)
 
 ## Commands
 
@@ -348,6 +380,7 @@ __SerialDebug__ takes care of inputs from serial, and process predefined command
 
       f -> call the function
           f ?  -> to show more help 
+
       dbg [on|off] -> enable/disable the simple software debugger
 
       Only if debugger is enabled:
@@ -727,6 +760,10 @@ How this works, without a real hardware debugger? :
 This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
+
+### 0.9.7	- 2018-10-18		
+
+    - Checking if debugger is enabled
 
 ### 0.9.6	- 2018-10-09
 

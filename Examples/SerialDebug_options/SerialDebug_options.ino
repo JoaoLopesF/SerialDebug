@@ -11,6 +11,8 @@
 
 ////// Includes
 
+#include "Arduino.h"
+
 // SerialDebug Library
 
 // SerialDebug disables examples

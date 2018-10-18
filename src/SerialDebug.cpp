@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.7	2018-10-18		Checking if debugger is enabled
  * 0.9.6 	2018-10-09		New debug format output
  * 0.9.5	2018-10-07		New print macros
  *							Optimization on debugPrintf logic
@@ -108,7 +109,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.6")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.7")                   	// Version of this library
 
 // Low memory board ?
 
@@ -5429,9 +5430,18 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 		// Process
 
-		processGlobals(options);
+		if (_debugDebuggerEnabled) {
 
-		canRepeat = true;
+			processGlobals(options);
+
+			canRepeat = true;
+
+		} else {
+
+			printSerialDebug();
+			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
+		}
+
 #else
 		printSerialDebug();
 		Serial.println(F("Debug functions is not enabled in your project"));
@@ -5446,7 +5456,16 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 		// Process
 
-		processWatches(options);
+		if (_debugDebuggerEnabled) {
+
+			processWatches(options);
+
+		} else {
+
+			printSerialDebug();
+			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
+		}
+
 #else
 		printSerialDebug();
 		Serial.println(F("Debug functions is not enabled in your project"));
