@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.71	2018-10-19		Just for new release, due problems on library.proprierties
  * 0.9.7	2018-10-18		Checking if debugger is enabled
  * 0.9.6 	2018-10-09		New debug format output
  * 0.9.5	2018-10-07		New print macros
@@ -109,7 +110,7 @@
 
 // Version
 
-#define DEBUG_VERSION F("0.9.7")                   	// Version of this library
+#define DEBUG_VERSION F("0.9.71")                   	// Version of this library
 
 // Low memory board ?
 
