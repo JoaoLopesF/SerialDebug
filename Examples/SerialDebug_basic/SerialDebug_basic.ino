@@ -5,19 +5,8 @@
 // Author: Joao Lopes
 // GitHub: https://github.com/JoaoLopesF/SerialDebug
 //
-// Example to show how to use it.
+// Basic example to show how to use it.
 //
-// Example of use:
-//
-//		debugA("This is a always - var %d", var);
-//
-//		debugV("This is a verbose - var %d", var);
-//		debugD("This is a debug - var %d", var);
-//		debugI("This is a information - var %d", var);
-//		debugW("This is a warning - var %d", var);
-//		debugE("This is a error - var %d", var);
-//
-//		debugV("This not have args");
 ///////
 
 ////// Includes
@@ -89,7 +78,7 @@ void setup() {
 
     // Note: all debug in setup must be debugA (always), due it is disabled now.
 
-    debugA(F("**** Setup: initializing ..."));
+    printlnA(F("**** Setup: initializing ..."));
 
     // Buildin led
 
@@ -102,7 +91,7 @@ void setup() {
 
     // End
 
-    debugA(F("*** Setup end"));
+    printlnA(F("*** Setup end"));
 
 }
 
@@ -125,17 +114,19 @@ void loop()
 
 	// Debug the time (verbose level)
 
-	debugV(F("Time: %u seconds (VERBOSE)"), mTimeSeconds);
+	printV(F("Time: "));
+	printV(mTimeSeconds);
+	printlnV(F(" seconds (VERBOSE)"));
 
 	if (mTimeSeconds % 5 == 0) { // Each 5 seconds
 
 		// Debug levels
 
-		debugV(F("This is a message of debug level VERBOSE"));
-		debugD(F("This is a message of debug level DEBUG"));
-		debugI(F("This is a message of debug level INFO"));
-		debugW(F("This is a message of debug level WARNING"));
-		debugE(F("This is a message of debug level ERROR"));
+		printlnV(F("This is a message of debug level VERBOSE"));
+		printlnD(F("This is a message of debug level DEBUG"));
+		printlnI(F("This is a message of debug level INFO"));
+		printlnW(F("This is a message of debug level WARNING"));
+		printlnE(F("This is a message of debug level ERROR"));
 
 		// Functions example to show auto function name feature
 
@@ -160,24 +151,16 @@ void foo() {
 
   uint8_t var = 1;
 
-  debugV(F("This is a debug - var %u"), var);
+  printV(F("This is a debug - var "));
+  printlnV(var);
 }
 
 void bar() {
 
   uint8_t var = 2;
 
-  debugD(F("This is a debug - var %u"), var);
-
-  // Example of float formatting:
-
-  float val = 1.23f;
-
-#ifndef ARDUINO_ARCH_AVR // Native float printf support
-	debugV("float = %.3f", val);
-#else // For AVR, it is not supported, using String instead
-	debugV("float = %s", String(val).c_str());
-#endif
+  printD(F("This is a debug - var "));
+  printlnD(var);
 
 }
 
