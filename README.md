@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.72-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.73-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -338,6 +338,11 @@ __SerialDebugApp__ is a freeware desktop app, companion for this library.
 Note: this library is not depending on this software,
 you can use default serial monitor of Arduino IDE,
 or another program.
+
+Why this app is an freeware and not open source ?
+
+This app is based in my another commercial projects,
+through the serial port, control devices with the Arduino.
 
 __SerialDebugApp__ is a serial monitor, made for this library:
 
@@ -765,6 +770,10 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 - Error on use debug* macros with F(). workaround for now: print* macros is ok for it.
 
 ## Releases
+
+### 0.9.73 - 2018-10-24
+
+    - Adjustments to SerialDebugApp show debugger panel in App
 
 ### 0.9.72 - 2018-10-21
 

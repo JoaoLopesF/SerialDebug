@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.73	2018-10-24		Adjustments to SerialDebugApp show debugger panel in App
  * 0.9.72	2018-10-21		Corrected bug on basic example
  * 							Few adjustments
  * 0.9.71	2018-10-19		Just for new release, due problems on library.proprierties
@@ -115,9 +116,9 @@
 	}
 #endif
 
-// Version
+// Version -- Note to JoaoLopesF -> not forgot change it in github repo and versoes.txt (for app)
 
-#define DEBUG_VERSION F("0.9.72")                   // Version of this library
+#define DEBUG_VERSION F("0.9.73")                   // Version of this library
 
 // Low memory board ?
 
@@ -310,7 +311,6 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 	// Connection with SerialDebugApp ?
 
 	static boolean _debugSerialApp = false;
-	static boolean _debugSerialAppPro = false; // Pro version ?
 
 	// To show help (uses PROGMEM)
 	// Note: Using PROGMEM in large string (even for Espressif boards)
@@ -514,7 +514,7 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 
 /////// Prototypes - private
 
-static void debugSerialAppConnection(boolean versionPro);
+static void debugSerialAppConnection();
 
 /////// Defines (private)
 
@@ -1161,7 +1161,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 #ifdef BOARD_ENOUGH_MEMORY // Modern and faster board ?
 
-		boolean process = _debugSerialAppPro; // Always process for app Pro
+		boolean process = _debugSerialApp; // Always process for app
 
 #else
 		boolean process = false;
@@ -1217,7 +1217,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 					global->changed = true;
 
-					if (_debugSerialAppPro) { // SerialDebugApp Pro connected ?
+					if (_debugSerialApp) { // SerialDebugApp connected ?
 
 						// Get value
 
@@ -1228,7 +1228,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 						// Send it
 
-						if (_debugSerialAppPro) {
+						if (_debugSerialApp) {
 							PRINTFLN(F("$app:C:%u:%s"), (g + 1), value.c_str());
 						}
 					}
@@ -1316,7 +1316,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 					showWatch(w, false);
 
-					if (_debugSerialAppPro) { // App Pro ?
+					if (_debugSerialApp) { // App ?
 						PRINTFLN(F("$app:T:%u:1"), (w + 1));
 					}
 
@@ -1324,7 +1324,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 
 					watch->triggered = false;
 
-					if (_debugSerialAppPro) { // App Pro ?
+					if (_debugSerialApp) { // App ?
 						PRINTFLN(F("$app:T:%u:0"), (w + 1));
 					}
 
@@ -2901,7 +2901,7 @@ static void processWatches(String& options) {
 				Serial.println("Watches set to non stop");
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
-				if (_debugSerialAppPro) {
+				if (_debugSerialApp) { // App ?
 					PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
 				}
 #endif // BOARD_LOW_MEMORY
@@ -2916,7 +2916,7 @@ static void processWatches(String& options) {
 				Serial.println("Watches set to stop");
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
-				if (_debugSerialAppPro) {
+				if (_debugSerialApp) { // ? App
 					PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
 				}
 #endif // BOARD_LOW_MEMORY
@@ -5393,6 +5393,16 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 		// Enable/disable the Simple Software Debugger
 
+		boolean saveWatchStop = _debugWatchStop;
+
+		if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+			_debugWatchStop = false; // disable it for now
+
+		}
+
+		// Process
+
 		if (options == "on") {
 			_debugDebuggerEnabled = true;
 		} else if (options == "off") {
@@ -5403,9 +5413,55 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 		if (_debugSerialApp) { // For DebugSerialApp connection ?
 
+			// Debugger enabled ?
+
+			if (_debugDebuggerEnabled) {
+
+				// Process handle to update globals
+
+				debugHandleDebugger(true);
+
+				// Send debugger elements
+
+				printSerialDebug();
+				PRINTFLN(F("Sending debugger objects ..."));
+
+				// Send info
+
+				PRINTFLN(F("$app:D:")); // To clean arrays
+
+				String all="";
+
+				if (_debugFunctionsAdded > 0) {
+					showFunctions(all, false, true);
+				}
+
+				if (_debugGlobalsAdded > 0) {
+					showGlobals(all, false, true);
+				}
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+				if (_debugWatchesAdded > 0) {
+					showWatches(all, true);
+				}
+
+#endif // BOARD_LOW_MEMORY
+
+				printSerialDebug();
+				PRINTFLN(F("End of sending."));
+
+			}
+
 			// Send status
 
 			PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+
+			// Restore stop
+
+			_debugWatchStop = saveWatchStop;
+
+
 		}
 
 		printSerialDebug();
@@ -5583,7 +5639,7 @@ static void processCommand(String& command, boolean repeating, boolean showError
 
 		D("$app -> %s", options.c_str());
 
-		debugSerialAppConnection((options == "Pro"));
+		debugSerialAppConnection();
 
 	} else {
 
@@ -6441,10 +6497,16 @@ static boolean showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, boolea
 
 	// Get value
 
-	getStrValue(global->type, global->pointer, \
-			((mode != DEBUG_SHOW_GLOBAL_APP_CONN)?global->showLength: 0), (mode != DEBUG_SHOW_GLOBAL_APP_CONN), \
-			value, type);
 
+	getStrValue(global->type, global->pointer, \
+			((mode != DEBUG_SHOW_GLOBAL_APP_CONN)?global->showLength:0), (mode != DEBUG_SHOW_GLOBAL_APP_CONN), \
+			value, type);
+/*
+ * TODO: see it
+//	getStrValue(global->type, global->pointer, \
+//			((!_debugSerialApp)?global->showLength:0), (!_debugSerialApp), \
+//			value, type);
+*/
 	if (value.length() > 0) {
 
 		// Show
@@ -6998,12 +7060,11 @@ static void printSerialDebug() {
 
 // Connection with SerialDebugApp
 
-static void debugSerialAppConnection(boolean versionPro) {
+static void debugSerialAppConnection() {
 
 	// Connected
 
 	_debugSerialApp = true;
-	_debugSerialAppPro = versionPro;
 
 	// Send version, board, debugger disabled and  if is low or enough memory board
 
@@ -7030,7 +7091,7 @@ static void debugSerialAppConnection(boolean versionPro) {
 
 	// Send debugger elements
 
-	if (versionPro) { // Only for App PRO
+	if (_debugDebuggerEnabled) {
 
 		printSerialDebug();
 		PRINTFLN(F("Sending debugger objects ..."));
@@ -7093,13 +7154,17 @@ static void debugSerialAppConnection(boolean versionPro) {
 	// Status of nonstop
 
 	PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
+
+	// Status of debugger
+
+	PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+
 #endif // BOARD_LOW_MEMORY
 
 	// Print message
 
 	printSerialDebug();
-	PRINTFLN(F("Conection with app %s- SerialDebug library version %s"),
-			((versionPro)?"Pro ":""), version.c_str());
+	PRINTFLN(F("Conection with app - SerialDebug library version %s"), version.c_str());
 
 	// Out of silent mode
 
