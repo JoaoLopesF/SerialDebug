@@ -1,7 +1,7 @@
 # SerialDebugApp
 Freeware desktop App, companion for SerialDebug Library.
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.0-blue.svg)</a> [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/SerialDebugApp)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.2-blue.svg)</a> [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/SerialDebugApp)
 
 __SerialDebugApp__ is a freeware desktop app, companion for __SerialDebug__ library for Arduino.
 
@@ -90,3 +90,18 @@ Or:
     [Download runnable Java jar file](http://joaolopesf.net/downloads/serialdebugapp/SerialDebugApp.jar.zip)
 
     Just unzip and run.
+
+## Releases
+
+### 0.9.2 - 2018-10-25
+  
+    - Debugger panel
+    - Few adjstments
+
+### 0.9.1 - 2018-10-23
+  
+    - Few adjstments
+
+### 0.9.0 - 2018-09-15
+
+    - First beta
