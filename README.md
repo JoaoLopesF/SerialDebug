@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.73-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.74-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -102,7 +102,12 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   To reproduce it, just upload the advanced example,
   and call function 8 (just command: f 8) to run all benchmarks of serial.
 
-  In future versions will more otimized, for CPU and memory
+  Now (>= 0.9.74) __SerialDebug__ have a mode mininum,
+  for boards with low memory to program, as Arduino UNO,
+  if this mode is set, SerialDebug only show messages,
+  no extra functions or processing
+
+  In future versions, the __SerialDebug__ will more otimized, for CPU and memory
 
 - It is good for __any__ Arduino
 
@@ -266,6 +271,8 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   as ESP-IDF, Android, iOS, etc.
   In these, each call generates a formatted output line.
 
+  Note: this is not for low memory boards as Arquino UNO
+
 - Have __auto__ function name and simple __profiler__
 
   A simple debug:
@@ -324,6 +331,8 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
   See about this below.
 
+  Note: this is not for low memory boards as Arquino UNO
+  
 - Ready for __production__ (release compiler))
 
     For release your device, just uncomment DEBUG_DISABLED in your project
@@ -446,6 +455,8 @@ Notes:
 
 Just download or clone this repository.
 
+You can use the library manager to install and update the library.
+
 For install help, please see: [https://www.arduino.cc/en/Guide/Libraries](https://www.arduino.cc/en/Guide/Libraries)
 
 Note: In some boards, after upload if you see only dirty characteres in serial monitor,
@@ -465,6 +476,8 @@ please reset the board. There is possibly some glitch in the serial monitor of A
                           not use F(), due RAM is more faster than Flash memory
 
       - Disabled -> example of how disable features, or entire SerialDebug
+
+    Note: for low memory boards, as UNO, please open only the basic example.
 
 To add __SerialDebug__ to your Arduino project:
 
@@ -625,6 +638,8 @@ debugAddWatchUInt8_t("mRunMinutes", DEBUG_WATCH_GREAT, 3);
 debugAddWatchCross("mRunMinutes", DEBUG_WATCH_EQUAL, "mRunSeconds");
 ```
 
+Note: Has a converter to do it for You: [SerialDebugConverter](https://github.com/JoaoLopesF/SerialDebugConverter)
+
 ### loop
 
 - In the begin of loop function
@@ -771,6 +786,12 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
 
+### 0.9.74 - 2018-10-25	
+  
+    - Adjustments to SerialDebugApp show debugger info in App
+    - Now low memory boards have debugger disabled by default, but enabled commands (debug level, help ...)
+    - Create an mode minimum to low memory boards - only debug output enabled to save memory
+    
 ### 0.9.73 - 2018-10-24
 
     - Adjustments to SerialDebugApp show debugger panel in App

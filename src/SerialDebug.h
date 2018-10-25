@@ -51,6 +51,26 @@
 // If you need more memory, can force it:
 //#define DEBUG_USE_FLASH_F true
 
+#ifdef BOARD_LOW_MEMORY // For boards with low memory
+
+// Disabling debugger for low memory boards - 2018-10-25
+// Uncomment if you want try it - but for now, it consumes much program space for this boards
+#define DEBUG_DISABLE_DEBUGGER true
+
+// Mode minimum - only to show messages of debug
+// No commands from serial, no debugger, no printf
+// Minumum usage of memory RAM and program
+// Comment this, if not want to use this mode
+#define DEBUG_MINIMUM true
+
+	#ifdef DEBUG_MINIMUM // For minumum mode - debugger always disabled
+		#define DEBUG_DISABLE_DEBUGGER true
+	#endif
+
+#endif // BOARD_LOW_MEMORY
+
+// TODO: see it
+
 // Debug level - need stay here, to not cause errors in DEBUG_DISABLED empty macros
 
 typedef enum {
@@ -109,6 +129,20 @@ typedef enum {										// Type of operator
 
 	#endif
 
+	#define printA(x)
+	#define printV(x)
+	#define printD(x)
+	#define printI(x)
+	#define printW(x)
+	#define printE(x)
+
+	#define printlnA(x)
+	#define printlnV(x)
+	#define printlnD(x)
+	#define printlnI(x)
+	#define printlnW(x)
+	#define printlnE(x)
+
 	#define DEBUG_DISABLE_DEBUGGER true
 
 #else // Debugs enabled
@@ -124,6 +158,8 @@ typedef enum {										// Type of operator
 #endif
 
 // Size for commands
+
+#ifndef DEBUG_MINIMUM
 
 #define DEBUG_MAX_SIZE_COMMANDS 10			// Maximum size of commands - can be changed
 #define DEBUG_MAX_SIZE_CMD_OPTIONS 64		// Maximum size of commands options - can be changed
@@ -148,23 +184,30 @@ typedef enum {										// Type of operator
 
 #define DEBUG_MIN_TIME_EVENT 850
 
+#endif // DEBUG_MINIMUM
+
 //////// Prototypes - public
 
 void debugHandleInactive();
-void debugHandleEvent(boolean calledByHandleEvent);
-void debugSilence(boolean activate, boolean showMessage, boolean fromBreak = false);
 void debugSetLevel(uint8_t level);
+void debugSilence(boolean activate, boolean showMessage, boolean fromBreak = false);
+void debugPrintInfo(const char level, const char* function);
+
+#ifndef DEBUG_MINIMUM
+
+void debugHandleEvent(boolean calledByHandleEvent);
 String debugBreak();
-String debugBreak(String& str, uint32_t timeout = DEBUG_BREAK_TIMEOUT);
 String debugBreak(const __FlashStringHelper * str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
 String debugBreak(const char* str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
 
-void debugPrintInfo(const char level, const char* function);
-
 void debugSetProfiler(boolean active);
+
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
+	String debugBreak(String& str, uint32_t timeout = DEBUG_BREAK_TIMEOUT);
 	void debugShowProfiler(boolean activate, uint16_t minTime, boolean showMessage);
 #endif
+
+#endif // DEBUG_MINIMUM
 
 // Debugger
 
@@ -314,10 +357,6 @@ void debugSetProfiler(boolean active);
 
 		int8_t debugAddWatchCross(const __FlashStringHelper* globalName, uint8_t operation, const __FlashStringHelper* anotherGlobalName, boolean allwaysStop = false);
 
-		// Handle debugger
-
-		void debugHandleDebugger (boolean calledByHandleEvent);
-
 	#else // Low memory boards -> reduced number of functions
 
 		// For flash F
@@ -340,15 +379,15 @@ void debugSetProfiler(boolean active);
 
 		// No watches
 
-		// Break
-
-		String debugBreak();
-		String debugBreak(const __FlashStringHelper* str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
-		String debugBreak(const char* str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
-
 	#endif // Low memory
 
+	// Handle debugger
+
+	void debugHandleDebugger (boolean calledByHandleEvent);
+
 #endif //DEBUG_DISABLE_DEBUGGER
+
+#ifndef DEBUG_MINIMUM
 
 // For printf support, if not have a native
 
@@ -356,6 +395,8 @@ void debugSetProfiler(boolean active);
 	void debugPrintf(boolean newline, const char level, const char* function, const char* format, ...);
 	void debugPrintf(boolean newline, const char level, const char* function, const __FlashStringHelper *format, ...) ;
 #endif
+
+#endif // DEBUG_MINIMUM
 
 //////// External variables (need to use macros)
 
@@ -387,6 +428,8 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 
 // Macro to handle the SerialDebug (better performance)
 
+#ifndef DEBUG_MINIMUM
+
 #define debugHandle() {  \
 	if (!_debugActive) { \
 		debugHandleInactive(); \
@@ -396,14 +439,28 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 	} \
 }
 
+#else
+
+#define debugHandle() {  \
+	if (!_debugActive) { \
+		debugHandleInactive(); \
+	} \
+}
+
+#endif // DEBUG_MINIMUM
+
 // Macros for debugs
 // Note: not used F() for formats, due it is small and Flash can be slow
 
 #ifndef DEBUG_DISABLE_DEBUGGER
-	#define DEBUG_HANDLE_DEBUGGER() \
-		if (_debugDebuggerEnabled && _debugGlobalsAdded > 0 && _debugWatchesEnabled) { \
-			debugHandleDebugger(false); \
-		}
+	#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+		#define DEBUG_HANDLE_DEBUGGER() \
+			if (_debugDebuggerEnabled && _debugGlobalsAdded > 0) { \
+				debugHandleDebugger(false); \
+			}
+	#else
+		#define DEBUG_HANDLE_DEBUGGER()
+	#endif
 #else
 	#define DEBUG_HANDLE_DEBUGGER()
 #endif
@@ -610,6 +667,8 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 // - Not Espressif boards not have printf :-(,
 // - Or Espressif boards to use F() - flash strings - in printf, just enable DEBUG_USE_FLASH_F in your project)
 
+#ifndef DEBUG_MINIMUM
+
 #ifndef _debug // Not defined yet
 
 	// Normal debug
@@ -684,7 +743,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 
 #endif // _debugIsr
 
-#endif // DEBUG_DISABLED
+#endif // DEBUG_MINIMUM
 
 // New macros for debug - print macros (to not use printf and to easy to migrate)
 
@@ -749,6 +808,8 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 #define printE(x) if (!_debugSilence) 											printLevel('E', x)
 #define printlnE(x) if (!_debugSilence) 										printlnLevel('E', x)
 
+#endif // DEBUG_DISABLED
+
 // Debugger disabled ?
 
 #ifdef DEBUG_DISABLE_DEBUGGER
@@ -799,8 +860,6 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 	#define debugAddWatchString (...)
 
 	#define debugAddWatchCross(...)
-
-	#define debugBreak(...)
 
 	#define debugHandleDebugger(...)
 

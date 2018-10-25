@@ -48,6 +48,10 @@
 
 #include "SerialDebug.h" //https://github.com/JoaoLopesF/SerialDebug
 
+#ifdef DEBUG_MINIMUM
+#error "For mode minimum, please open the basic example"
+#endif
+
 ////// Variables
 
 // Time

@@ -7,7 +7,10 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
- * 0.9.73	2018-10-24		Adjustments to SerialDebugApp show debugger panel in App
+ * 0.9.74	2018-10-25		Adjustments to SerialDebugApp show debugger info in App
+ *                          Now low memory boards have debugger disabled by default, but enabled commands (debug level, help ...)
+ *                          Create an mode minimum to low memory boards - only debug output enabled to save memory
+ * 0.9.73	2018-10-24		Adjustments to SerialDebugApp show debugger info in App
  * 0.9.72	2018-10-21		Corrected bug on basic example
  * 							Few adjustments
  * 0.9.71	2018-10-19		Just for new release, due problems on library.proprierties
@@ -47,7 +50,7 @@
  * TODO list:
  * - see all warnings
  * - more optimizations to speed
- * - more optimizations to reduce memory for low memory boards (UNO, etc.)
+ * - more optimizations to reduce memory and program for low memory boards (UNO, etc.)
  * - more types
  * - gpio commands
  */
@@ -78,10 +81,14 @@
 
 #include "SerialDebug.h"
 
-
 // Debugger ?
 
 #ifndef DEBUG_DISABLE_DEBUGGER
+
+#ifdef BOARD_LOW_MEMORY
+// Warning to low memory MCUs
+#warning "Debugger on low memory MCU is still not yet full optimized - use with caution"
+#endif
 
 // Vector (to reduce memory and no fixed limit)
 
@@ -118,7 +125,7 @@
 
 // Version -- Note to JoaoLopesF -> not forgot change it in github repo and versoes.txt (for app)
 
-#define DEBUG_VERSION F("0.9.73")                   // Version of this library
+#define DEBUG_VERSION F("0.9.74")                   // Version of this library
 
 // Low memory board ?
 
@@ -240,11 +247,11 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 		const char* description = 0;					// Description
 		const __FlashStringHelper *descriptionF = 0;	// Description (in flash)
+#endif
 		uint8_t typeOld = 0;							// Type of old value variable (used to strings)
 		void *pointerOld = 0;							// Generic pointer for old value
 		boolean changed = false;						// Value change (between 2 debug handle call)
 		boolean updateOldValue = false;					// Update old value ? (in debug handle call)
-#endif
 	};
 
 	#ifdef VECTOR_STD  // Arduino arch have C++ std vector
@@ -295,6 +302,14 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 
 #endif
 
+#endif // DEBUG_DISABLE_DEBUGGER
+
+#ifndef DEBUG_MINIMUM
+
+	// Connection with SerialDebugApp ?
+
+	static boolean _debugSerialApp = false;
+
 	// String helper, used to store name extracted from Flash and receive commands
 	// Unified this 2 usages, to reduce memory
 
@@ -307,10 +322,6 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 	// Repeat last command (in each debugHandler)
 
 	static boolean _debugRepeatCommand = false;
-
-	// Connection with SerialDebugApp ?
-
-	static boolean _debugSerialApp = false;
 
 	// To show help (uses PROGMEM)
 	// Note: Using PROGMEM in large string (even for Espressif boards)
@@ -437,7 +448,7 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 *      gpio -> see/control gpio\r\n\
 *";
 
-#endif
+#endif // BOARD_LOW_MEMORY
 
 #endif // DEBUG_DISABLE_DEBUGGER
 
@@ -445,10 +456,10 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 
 	// Note: only public functions start with debug...
 
-	static void printSerialDebug();
-
 	static void processCommand(String& command, boolean repeating = false, boolean showError = true);
 	static void showHelp();
+
+#ifndef DEBUG_DISABLE_DEBUGGER
 
 	// For functions
 
@@ -480,9 +491,7 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 
 	static void getStrValue(uint8_t type, void* pointer, uint8_t showLength, boolean showSize,  String& response, String& responseType);
 	static void updateValue(uint8_t typeFrom, void* pointerFrom, uint8_t typeTo, void** pointerTo);
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 	static boolean apllyOperation(uint8_t type1, void* pointer1, uint8_t operation, uint8_t type2, void* pointer2);
-#endif
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
@@ -500,21 +509,26 @@ boolean _debugPrintIsNewline = true;				// Used in print macros
 
 #endif
 
-	static int freeMemory();
-
-	#ifdef ARDUINO_ARCH_AVR
-
-		// Only for AVR boards
-
-		static void(* avrResetArduino) (void) = 0;	// Based on https://www.instructables.com/id/two-ways-to-reset-arduino-in-software/
-
-	#endif
-
 #endif // DEBUG_DISABLE_DEBUGGER
 
-/////// Prototypes - private
+static int freeMemory();
 
-static void debugSerialAppConnection();
+#ifdef ARDUINO_ARCH_AVR
+
+	// Only for AVR boards
+
+	static void(* avrResetArduino) (void) = 0;	// Based on https://www.instructables.com/id/two-ways-to-reset-arduino-in-software/
+
+#endif
+
+#endif // DEBUG_MINIMUM
+
+static void printSerialDebug();
+
+/////// Prototypes - private
+#ifndef DEBUG_MINIMUM
+void debugSerialAppConnection();
+#endif // DEBUG_MINIMUM
 
 /////// Defines (private)
 
@@ -530,6 +544,8 @@ static void debugSerialAppConnection();
 
 // Internal printf (no time, auto func, etc, just print it)
 
+#ifndef DEBUG_MINIMUM
+
 #ifdef DEBUG_USE_NATIVE_PRINTF // For Espressif boards, have Serial.printf
 
 	#define PRINTF(fmt, ...)   Serial.printf(fmt, ##__VA_ARGS__)
@@ -542,10 +558,12 @@ static void debugSerialAppConnection();
 
 #endif
 
+#endif // DEBUG_MINIMUM
+
 // Debug internal, all must commented on release
 
-//#define D(fmt, ...)
-#define D(fmt, ...) PRINTF("$dbg: " fmt "\r\n", ##__VA_ARGS__)
+#define D(fmt, ...)
+//#define D(fmt, ...) PRINTF("$dbg: " fmt "\r\n", ##__VA_ARGS__)
 
 /////// Methods 
 
@@ -562,7 +580,9 @@ static void debugSerialAppConnection();
 
 void debugHandleInactive() {
 
+#ifndef DEBUG_DISABLE_DEBUGGER
     static uint8_t execCount = 6; // Count debugHandleInactive calls
+#endif
 
 #if defined ESP8266 || defined ESP32 // Only for Espressif boards
 
@@ -575,11 +595,13 @@ void debugHandleInactive() {
 
 #endif
 
+#ifndef DEBUG_MINIMUM
     // SerialApp connected ?
 
     if (_debugSerialApp && execCount == 6) {
     	Serial.println(F("$app:I"));
     }
+#endif // DEBUG_MINIMUM
 
     // Test if first data is arrived, to enable debugs
 
@@ -595,12 +617,55 @@ void debugHandleInactive() {
         // Uncomment this if You want the help here
         //showHelp();
 
+#ifdef DEBUG_MINIMUM
+
+        // For minimum - checks if is app
+
+        String data = "";
+        while (Serial.available() > 0) {
+        	char character = Serial.read();
+        	if (character == 10 or character == 13) { // new line
+        		break;
+        	} else {
+        		data.concat(character);
+        	}
+        }
+
+        if (data == "$app") { // App connected - send status
+
+        	// Send info
+
+        	char features = 'D';
+        	char dbgEnabled = 'D';
+        	char dbgMinimum = 'Y';
+
+        	Serial.print("$app:V:");
+        	Serial.print(DEBUG_VERSION);
+        	Serial.print(':');
+        	Serial.print(BOARD);
+        	Serial.print(':');
+        	Serial.print(features);
+        	Serial.print(':');
+        	Serial.print('?');
+        	Serial.print(':');
+        	Serial.print(dbgEnabled);
+        	Serial.print(':');
+        	Serial.println(dbgMinimum);
+
+        	// Print message
+
+        	printSerialDebug();
+        	Serial.print(F("Conection with app - SerialDebug library version "));
+        	Serial.println(DEBUG_VERSION);
+
+        }
+#else
         // SerialApp connected ?
 
         if (_debugSerialApp) {
         	Serial.println(F("$app:A"));
         }
-
+#endif
         // Go to initial level
 
         if (_debugLevel == DEBUG_LEVEL_NONE) {
@@ -636,6 +701,162 @@ void debugHandleInactive() {
 #endif
 
 }
+
+// Set actual levef of debug
+
+void debugSetLevel(uint8_t level) {
+
+	printSerialDebug();
+
+	if (level < DEBUG_LEVELS_SIZE) {
+		_debugLevel = level;
+		Serial.print(F("Level set to "));
+		switch (_debugLevel) {
+		case DEBUG_LEVEL_NONE:
+			Serial.println(F("None"));
+			break;
+		case DEBUG_LEVEL_ERROR:
+			Serial.println(F("Error"));
+			break;
+		case DEBUG_LEVEL_WARN:
+			Serial.println(F("Warning"));
+			break;	\
+		case DEBUG_LEVEL_INFO:
+			Serial.println(F("Information"));
+			break;	\
+		case DEBUG_LEVEL_DEBUG:
+			Serial.println(F("Debug"));
+			break;
+		case DEBUG_LEVEL_VERBOSE:
+			Serial.println(F("Verbose"));
+			break;
+		}
+	}
+
+#ifndef DEBUG_MINIMUM
+	if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+		// Send status
+
+		PRINTFLN(F("$app:L:%u"), _debugLevel);
+	}
+#endif
+
+	// Out of silent mode
+
+	if (_debugSilence) {
+
+		debugSilence(false, false);
+	}
+}
+
+// Silence
+
+void debugSilence(boolean activate, boolean showMessage, boolean fromBreak) {
+
+	_debugSilence = activate;
+
+	//D("silence %d", _debugSilence);
+
+	if (_debugSilence && showMessage) {
+
+		printSerialDebug();
+		Serial.println();
+		Serial.println(F("* Debug now is in silent mode"));
+		Serial.println(F("* Press enter or another command to return show debugs"));
+
+	} else if (!_debugSilence && showMessage) {
+
+		printSerialDebug();
+		Serial.println(F("Debug now exit from silent mode"));
+	}
+
+#ifndef DEBUG_MINIMUM
+	if (_debugSerialApp && !fromBreak) { // For DebugSerialApp connection ?
+
+		// Send status
+
+		PRINTFLN(F("$app:S:%c"), ((_debugSilence)? '1':'0'));
+	}
+#endif // DEBUG_MINIMUM
+
+}
+
+// Show debug info - in begin of line
+// Using String to concat, in tests, optimize only about 2%, due it not used
+
+void debugPrintInfo(const char level, const char* function) {
+
+	// Show level
+
+	Serial.print('(');
+	Serial.print(level);
+	Serial.print(' ');
+
+	// Show time / profiler
+
+	uint32_t time = 0;
+
+	if (_debugShowProfiler) {
+
+		time = (millis() - _debugLastTime);
+
+		Serial.print("p:^");
+
+		if (time < 10) { // Simple formatter, to not use printf
+			Serial.print("000");
+		} else if (time < 100) {
+			Serial.print("00");
+		} else if (time < 1000) {
+			Serial.print('0');
+		}
+		Serial.print(time);
+
+	} else {
+
+		Serial.print(millis());
+	}
+
+	_debugLastTime = millis();
+
+	// Show function
+
+#ifndef DEBUG_AUTO_FUNC_DISABLED
+
+	if (function) { // Auto function
+
+		Serial.print(' ');
+		Serial.print(function);
+
+	}
+#endif
+
+	// Show Core Id ?
+
+#ifdef DEBUG_CORE
+
+	Serial.print(' ');
+	Serial.print('C');
+	Serial.print(xPortGetCoreID());
+
+#endif
+
+	Serial.print(')');
+	Serial.print(' ');
+
+}
+
+// Print SerialDebug begin for messages
+// Note: It is done to reduce Program memory consupmition - for low memory boards support
+
+void printSerialDebug() {
+
+	Serial.print(F("* SerialDebug: "));
+}
+
+// Not for minimum mode - to save memory
+
+#ifndef DEBUG_MINIMUM
 
 // SerialDebug handle, to process data receipts, handles and events
 // Note: In ESP32 not used task for it, to avoid mixed serial outputs
@@ -723,67 +944,29 @@ void debugHandleEvent(boolean calledByHandleEvent) {
 			processCommand(_debugLastCommand, true);
 		}
 
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+#ifndef DEBUG_DISABLE_DEBUGGER
 
 		// Handle the debugger (globals and watches)
 
-		if (_debugDebuggerEnabled &&  _debugGlobalsAdded > 0 && !_debugSilence) { // TODO: silence ??
+		if (_debugDebuggerEnabled && _debugGlobalsAdded > 0) {
+
+	#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
 			debugHandleDebugger(calledByHandleEvent);
+
+	#else
+			if (calledByHandleEvent) {
+				debugHandleDebugger(calledByHandleEvent);
+			}
+	#endif
 		}
-#endif
+#endif // DEBUG_DISABLE_DEBUGGER
 	}
 
 	// Save time
 
     lastTime = millis();
 
-}
-
-// Set actual levef of debug
-
-void debugSetLevel(uint8_t level) {
-
-	printSerialDebug();
-
-	if (level < DEBUG_LEVELS_SIZE) {
-		_debugLevel = level;
-		Serial.print(F("Level set to "));
-		switch (_debugLevel) {
-		case DEBUG_LEVEL_NONE:
-			Serial.println(F("None"));
-			break;
-		case DEBUG_LEVEL_ERROR:
-			Serial.println(F("Error"));
-			break;
-		case DEBUG_LEVEL_WARN:
-			Serial.println(F("Warning"));
-			break;	\
-		case DEBUG_LEVEL_INFO:
-			Serial.println(F("Information"));
-			break;	\
-		case DEBUG_LEVEL_DEBUG:
-			Serial.println(F("Debug"));
-			break;
-		case DEBUG_LEVEL_VERBOSE:
-			Serial.println(F("Verbose"));
-			break;
-		}
-	}
-
-	if (_debugSerialApp) { // For DebugSerialApp connection ?
-
-		// Send status
-
-		PRINTFLN(F("$app:L:%u"), _debugLevel);
-	}
-
-	// Out of silent mode
-
-	if (_debugSilence) {
-
-		debugSilence(false, false);
-	}
 }
 
 // Profiler
@@ -834,99 +1017,6 @@ void debugShowProfiler(boolean activate, uint16_t minTime, boolean showMessage) 
 	}
 }
 #endif
-
-// Silence
-
-void debugSilence(boolean activate, boolean showMessage, boolean fromBreak) {
-
-	_debugSilence = activate;
-
-	//D("silence %d", _debugSilence);
-
-	if (_debugSilence && showMessage) {
-
-		printSerialDebug();
-		Serial.println();
-		Serial.println(F("* Debug now is in silent mode"));
-		Serial.println(F("* Press enter or another command to return show debugs"));
-
-	} else if (!_debugSilence && showMessage) {
-
-		printSerialDebug();
-		Serial.println(F("Debug now exit from silent mode"));
-	}
-
-	if (_debugSerialApp && !fromBreak) { // For DebugSerialApp connection ?
-
-		// Send status
-
-		PRINTFLN(F("$app:S:%c"), ((_debugSilence)? '1':'0'));
-	}
-}
-
-// Show debug info - in begin of line
-// Using String to concat, in tests, optimize only about 2%, due it not used
-
-void debugPrintInfo(const char level, const char* function) {
-
-	// Show level
-
-	Serial.print('(');
-	Serial.print(level);
-	Serial.print(' ');
-
-	// Show time / profiler
-
-	uint32_t time = 0;
-
-	if (_debugShowProfiler) {
-
-		time = (millis() - _debugLastTime);
-
-		Serial.print("p:^");
-
-		if (time < 10) { // Simple formatter, to not use printf
-			Serial.print("000");
-		} else if (time < 100) {
-			Serial.print("00");
-		} else if (time < 1000) {
-			Serial.print('0');
-		}
-		Serial.print(time);
-
-	} else {
-
-		Serial.print(millis());
-	}
-
-	_debugLastTime = millis();
-
-	// Show function
-
-#ifndef DEBUG_AUTO_FUNC_DISABLED
-
-	if (function) { // Auto function
-
-		Serial.print(' ');
-		Serial.print(function);
-
-	}
-#endif
-
-	// Show Core Id ?
-
-#ifdef DEBUG_CORE
-
-	Serial.print(' ');
-	Serial.print('C');
-	Serial.print(xPortGetCoreID());
-
-#endif
-
-	Serial.print(')');
-	Serial.print(' ');
-
-}
 
 // Debug printf (used for not Espressif boards (that have it) or to use flash strings
 // Based on Arduino Espressif Print.printf (thanks a lot)
@@ -1011,7 +1101,8 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 
 	// Send it to serial
 
-	Serial.write((uint8_t*)temp, len);
+//	Serial.write((uint8_t*)temp, len);
+	Serial.write((const char*)temp);
 
 	// Newline ?
 
@@ -1111,7 +1202,8 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 
 	// Send it to serial
 
-	Serial.write((uint8_t*)temp, len);
+//	Serial.write((uint8_t*)temp, len);
+	Serial.write((const char*)temp);
 
 	// Newline ?
 
@@ -1132,12 +1224,773 @@ void debugPrintf(boolean newline, const char level, const char* function, const 
 
 #endif // DEBUG_USE_NATIVE_PRINTF
 
+// debugBreak - show a message and wait for response
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+String debugBreak(String str, uint32_t timeout) {
+	return debugBreak(str.c_str(), timeout);
+}
+#endif
+
+String debugBreak() {
+
+	return debugBreak("", DEBUG_BREAK_TIMEOUT, false);
+
+}
+String debugBreak(const __FlashStringHelper *ifsh, uint32_t timeout, boolean byWatch) {
+
+	return debugBreak(String(ifsh).c_str(), timeout, byWatch);
+}
+
+String debugBreak(const char* str, uint32_t timeout, boolean byWatch) {
+
+	//D("debugBreak - timeout %u", timeout);
+
+	// Show a message
+
+	char appBreakType = '1';
+
+	if (strlen(str) > 0) { // String is informed ?
+
+		PRINTFLN(F("* %s"), str);
+
+	} else if (timeout == DEBUG_BREAK_TIMEOUT) { // Is called by debugBreak() and not for watches ?
+
+		Serial.println(F("* Press any key or command, and enter to continue"));
+		appBreakType = 'C';
+	}
+
+	if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+		PRINTFLN(F("$app:B:%c:%c"), appBreakType, ((byWatch)?'W':' '));
+	}
+
+	// Response buffer
+
+	String response = "";
+
+	// Wait for response // Note: the Arduino will wait for it, to continue runs
+
+	uint32_t lastTime = millis(); 			// Time of last receipt
+	char last = ' ';						// Last char received
+
+	// Enter in silence (if is not yet)
+
+	boolean oldSilence = _debugSilence;		// In silence mode ?
+
+	if (!_debugSilence) {
+		debugSilence(true, false, true);
+	}
+
+	// Ignore buffer
+
+	while (Serial.available()) {
+		Serial.read();
+	}
+
+	// Process serial data (until timeout, if informed)
+
+	while (timeout == 0 ||
+			((millis() - lastTime) <= timeout)){
+
+		if (Serial.available()) {
+
+		    // Get the new char:
+
+		    char character = (char)Serial.read();
+
+		    // Clear buffer if is a long time of last receipt
+
+		    if (response.length() > 0 && (millis() - lastTime) > 2000) {
+		    	response = "";
+		    }
+		    lastTime = millis(); // Save it
+
+			// Newline (CR or LF) - once one time if (\r\n)
+
+			if (isCRLF(character) == true) {
+
+				if (isCRLF(last) == false) { // New line -> return the command
+
+					//D("break");
+
+					break;
+				}
+
+			} else if (isPrintable(character)) { // Only valid
+
+				// Concat
+
+				response.concat(character);
+			}
+
+			// Last char
+
+			last = character;
+		}
+
+		delay(10); // Give a time
+	}
+
+	if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+		Serial.println(F("$app:B:0"));
+
+	}
+
+	// Is in silence ? (restore it)
+
+	if (_debugSilence && !oldSilence) {
+		debugSilence(false, false, true);
+	}
+
+	//D("response -> %s", response.c_str());
+
+	// Response (tolower always)
+	// response.toLowerCase();
+
+	return response;
+}
+
+// Process command receipt by serial (Arduino monitor, etc.)
+
+static void processCommand(String& command, boolean repeating, boolean showError) {
+
+	// Reduce information on error to support low memory boards
+	// Use a variable to reduce memory
+
+#if DEBUG_USE_FLASH_F
+
+	__FlashStringHelper* errorSintax = F("Invalid command. Use ? to show help");
+
+#else
+
+	const char* errorSintax = "Invalid command. Use ? to show help";
+
+#endif
+
+	//D(F("Command: %s last: %s"), command.c_str(), _debugLastCommand.c_str());
+
+	// Disable repeating
+
+	if (!repeating && _debugRepeatCommand) {
+		_debugRepeatCommand = false;
+	}
+
+	// Can repeat ?
+
+	boolean canRepeat = false;
+
+	// Extract options
+
+	String options = "";
+	int16_t pos = command.indexOf(' ');
+	if (pos > 0) {
+		options = command.substring(pos + 1);
+		command = command.substring(0, pos);
+	}
+
+	// Invalid
+
+	if (command.length() > DEBUG_MAX_SIZE_COMMANDS) {
+		printSerialDebug();
+		Serial.println(errorSintax);
+		return;
+	}
+
+	if (options.length() > DEBUG_MAX_SIZE_CMD_OPTIONS) {
+		printSerialDebug();
+		Serial.println(errorSintax);
+		return;
+	}
+
+	// Show command
+
+	if (command != "$app") {
+		printSerialDebug();
+		PRINTFLN(F("Command recv.: %s opt: %s"), command.c_str(), options.c_str());
+	}
+
+	// Verify if pass value between '"' - to avoid split the value in fields logic
+
+	boolean inMark = false;
+	char conv = 31;
+
+	for (uint8_t i=0; i<options.length(); i++) {
+
+		char c = options.charAt(i);
+
+		if (c == '"') {
+
+			inMark = !inMark;
+
+		} else {
+
+			if (c == ' ' && inMark) {
+				options.setCharAt(i, conv);
+			}
+		}
+	}
+
+	//D("opt -> %s", options.c_str());
+
+	// Process the command
+
+	if (command == "h" || command == "help" || command == "?") {
+
+		// Show help
+
+		showHelp();
+
+		// Do a break
+
+		String response = debugBreak("", DEBUG_BREAK_TIMEOUT, true);
+
+		if (response.length() > 0) { // Process command
+
+			processCommand(response, false);
+		}
+
+	} else if (command == "v") {
+
+		// Debug level
+
+		debugSetLevel(DEBUG_LEVEL_VERBOSE);
+
+	} else if (command == "d") {
+
+		// Debug level
+
+		debugSetLevel(DEBUG_LEVEL_DEBUG);
+
+	} else if (command == "i") {
+
+		// Debug level
+
+		debugSetLevel(DEBUG_LEVEL_INFO);
+
+	} else if (command == "w") {
+
+		// Debug level
+
+		debugSetLevel(DEBUG_LEVEL_WARN);
+
+	} else if (command == "e") {
+
+		// Debug level
+
+		debugSetLevel(DEBUG_LEVEL_ERROR);
+
+	} else if (command == "n") {
+
+		// Debug level
+
+		debugSetLevel(DEBUG_LEVEL_NONE);
+
+	} else if (command == "s") {
+
+		// Silence
+
+		debugSilence (!_debugSilence, true);
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+	} else if (command == "p") {
+
+		// Show profiler with minimal time
+
+		if (options.length() == 0) {
+
+			// Show profiler
+
+			debugShowProfiler(!_debugShowProfiler, 0, true);
+
+		} else {
+
+			// With minimal time
+
+			if (strIsNum(options)) {
+
+				int32_t aux = options.toInt();
+
+				if (aux > 0) { // Valid number
+
+					// Show profiler
+
+					debugShowProfiler(true, aux, true);
+
+				}
+
+			} else {
+
+				printSerialDebug();
+				Serial.println(F("Invalid number in argument"));
+			}
+		}
+
+#endif // Not low memory board
+
+	} else if (command == "dbg") {
 
 #ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
 
-// Add a function
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+		// Enable/disable the Simple Software Debugger
+
+		boolean saveWatchStop = _debugWatchStop;
+
+		if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+			_debugWatchStop = false; // disable it for now
+
+		}
+#endif // Not low memory board
+
+		// Globals or functions added ?
+
+		if (_debugGlobalsAdded == 0 && _debugFunctionsAdded == 0) {
+			printSerialDebug();
+			Serial.println(F("No globals or functions added"));
+			return;
+		}
+
+		// Process
+
+		if (options == "on") {
+			_debugDebuggerEnabled = true;
+		} else if (options == "off") {
+			_debugDebuggerEnabled = false;
+		} else {
+			_debugDebuggerEnabled = !_debugDebuggerEnabled; // invert it
+		}
+
+		if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+			// Debugger enabled ?
+
+			if (_debugDebuggerEnabled) {
+
+				// Process handle to update globals
+
+				debugHandleDebugger(true);
+
+				// Send debugger elements
+
+				printSerialDebug();
+				PRINTFLN(F("Sending debugger objects ..."));
+
+				// Send info
+
+				PRINTFLN(F("$app:D:")); // To clean arrays
+
+				String all="";
+
+				if (_debugFunctionsAdded > 0) {
+					showFunctions(all, false, true);
+				}
+
+				if (_debugGlobalsAdded > 0) {
+					showGlobals(all, false, true);
+				}
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+				if (_debugWatchesAdded > 0) {
+					showWatches(all, true);
+				}
+
+#endif // BOARD_LOW_MEMORY
+
+				printSerialDebug();
+				PRINTFLN(F("End of sending."));
+
+			}
+
+			// Send status
+
+			PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+			// Restore stop
+
+			_debugWatchStop = saveWatchStop;
+#endif // Not low memory board
+
+
+		}
+
+		printSerialDebug();
+		PRINTFLN(F("Simple software debugger: %s"), (_debugDebuggerEnabled) ? "On":"Off");
+
+#else
+		printSerialDebug();
+		Serial.println(F("Debugger is not enabled in your project"));
+
+#endif
+	} else if (command == "f") {
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+		// Process
+
+		processFunctions(options);
+
+		canRepeat = true;
+#else
+		printSerialDebug();
+		Serial.println(F("Debug functions is not enabled in your project"));
+
+#endif
+	} else if (command == "g") {
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+		// Process
+
+		if (_debugDebuggerEnabled) {
+
+			processGlobals(options);
+
+			canRepeat = true;
+
+		} else {
+
+			printSerialDebug();
+			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
+		}
+
+#else
+		printSerialDebug();
+		Serial.println(F("Debug functions is not enabled in your project"));
+
+#endif
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+	} else if (command == "wa") {
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+		// Process
+
+		if (_debugDebuggerEnabled) {
+
+			processWatches(options);
+
+		} else {
+
+			printSerialDebug();
+			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
+		}
+
+#else
+		printSerialDebug();
+		Serial.println(F("Debug functions is not enabled in your project"));
+
+#endif
+
+#endif // Not low memory board
+
+	} else if (command == "m") {
+
+		int free = freeMemory();
+
+		if (free != -1) {
+
+			PRINTFLN(F("* Free Heap RAM: %d"), free);
+
+			canRepeat = true;
+
+			if (_debugSerialApp) { // For DebugSerialApp connection ?
+
+				PRINTFLN(F("$app:M:%d:"), free);
+			}
+
+		} else {
+
+			printSerialDebug();
+			Serial.println(F("This option is not implemented for this board"));
+		}
+
+	} else if (command == "reset" ) {
+
+#ifdef ARDUINO_ARCH_AVR
+
+		printSerialDebug();
+		Serial.println(F("Resetting ..."));
+
+		delay(1000);
+
+		// Reset
+
+		avrResetArduino();
+
+#elif defined ESP8266 || defined ESP32 // Only for Espressif boards
+
+		printSerialDebug();
+
+	#if defined ESP8266
+		Serial.println("Resetting the ESP8266 ...");
+	#elif defined ESP32
+		Serial.println("Resetting the ESP32 ...");
+	#endif
+
+		delay(1000);
+
+		// Reset
+
+		ESP.restart();
+
+#else
+		printSerialDebug();
+		Serial.println(F("No reset for this board"));
+
+#endif // ARDUINO_ARCH_AVR
+
+#if defined ESP8266 // Only to ESP8266
+
+	} else if (command == "cpu80") {
+
+		// Change ESP8266 CPU para 80 MHz
+
+		system_update_cpu_freq(80);
+		printSerialDebug();
+		Serial.println(F("CPU ESP8266 changed to: 80 MHz"));
+
+	} else if (command == "cpu160") {
+
+		// Change ESP8266 CPU para 160 MHz
+
+		system_update_cpu_freq(160);
+		printSerialDebug();
+		Serial.println(F("CPU ESP8266 changed to: 160 MHz"));
+
+#endif
+
+	} else if (command == "r") {
+
+		// Repeat last command
+
+		if (options == "?") { // Help
+
+			printSerialDebug();
+			Serial.println(F("Valid last commands to repeat: f|g|m"));
+
+		} else if (_debugLastCommand.length() == 0) {
+
+			printSerialDebug();
+			Serial.println(F("Last command not set or unsupported. use r ? to show help"));
+
+		} else { // Start repeats
+
+			printSerialDebug();
+			PRINTFLN(F("Start repeating command: %s - press any command or enter to stop"), _debugLastCommand.c_str());
+			_debugRepeatCommand = true;
+		}
+
+	} else if (command == "$app") {
+
+		// Connection with SerialDebugApp
+
+		D("$app -> %s", options.c_str());
+
+		debugSerialAppConnection();
+
+	} else {
+
+		// Command invalid
+
+		if (showError) {
+			printSerialDebug();
+			Serial.println(errorSintax);
+		}
+	}
+
+	// Can repeat ?
+
+	//D("canrepeat=%d", canRepeat);
+
+	if (!repeating) { // Not if repeating commands
+
+		if (canRepeat) {
+
+			// Save it
+
+			_debugLastCommand = command;
+			_debugLastCommand.concat(' ');
+			_debugLastCommand.concat(options);
+
+		} else if (!_debugRepeatCommand) {
+
+			// Clear it
+
+			_debugLastCommand = "";
+		}
+	}
+}
+
+// Show debug help
+
+void showHelp() {
+
+	Serial.println('*');
+	printSerialDebug();
+	Serial.println();
+	Serial.print(F("* Version: "));
+	Serial.print(DEBUG_VERSION);
+	Serial.println();
+
+	Serial.print(F("* Arduino board: "));
+	Serial.print(BOARD);
+	Serial.println();
+
+	int free = freeMemory();
+
+	if (free != -1) {
+
+		PRINTFLN(F("* Free Heap RAM: %d"), free);
+	}
+
+#if defined ESP8266 || defined ESP32
+	PRINTFLN(F("* ESP SDK version: %s"), ESP.getSdkVersion());
+#endif
+
+	// Using PROGMEM in large strings (even for Espressif boards)
+
+	Serial.println(FPSTR(debugHelp));
+
+#ifdef ESP8266 // Esp8266 only (ESP32 not to easy to change it)
+
+	Serial.println(F("*    cpu80  -> ESP8266 CPU a 80MHz"));
+	Serial.println(F("*    cpu160 -> ESP8266 CPU a 160MHz"));
+
+#endif
+
+}
+
+// Connection with SerialDebugApp
+
+static void debugSerialAppConnection() {
+
+	// Connected
+
+	_debugSerialApp = true;
+
+	// Send version, board, debugger disabled and  if is low or enough memory board
+
+	char features;
+	char dbgEnabled;
+
+	// Features
+
+#if defined DEBUG_DISABLE_DEBUGGER
+	features = 'D'; // Disabled
+#elif defined BOARD_LOW_MEMORY
+	features = 'L'; // Low
+#elif defined BOARD_ENOUGH_MEMORY
+	features = 'E'; // Enough
+#else
+	features = 'M'; // Medium
+#endif
+
+	// Debugger is enabled ?
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+	dbgEnabled = 'E';
+
+	// Send debugger elements
+
+	if (_debugDebuggerEnabled) {
+
+		printSerialDebug();
+		PRINTFLN(F("Sending debugger objects ..."));
+
+		// Send info
+
+		PRINTFLN(F("$app:D:")); // To clean arrays
+
+		String all="";
+
+		if (_debugFunctionsAdded > 0) {
+			showFunctions(all, false, true);
+		}
+
+		if (_debugGlobalsAdded > 0) {
+			showGlobals(all, false, true);
+		}
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+		if (_debugWatchesAdded > 0) {
+			showWatches(all, true);
+		}
+
+#endif // BOARD_LOW_MEMORY
+
+		printSerialDebug();
+		PRINTFLN(F("End of sending."));
+
+	}
+
+#else
+
+	dbgEnabled = 'D';
+
+#endif // DEBUG_DISABLE_DEBUGGER
+
+	// Send info
+
+	String version = String(DEBUG_VERSION);
+	String board = String(BOARD);
+
+	PRINTFLN(F("$app:V:%s:%s:%c:%d:%c:N"), version.c_str(), board.c_str(), features, freeMemory(), dbgEnabled);
+
+	// Send status
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+
+	// Send status of debugger
+
+	PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+#endif
+
+	// Status of debug level
+
+	PRINTFLN(F("$app:L:%u"), _debugLevel);
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+	// Status of nonstop
+
+	PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
+
+#endif // BOARD_LOW_MEMORY
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
+	// Status of debugger
+
+	PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
+#endif
+
+	// Print message
+
+	printSerialDebug();
+	PRINTFLN(F("Conection with app - SerialDebug library version %s"), version.c_str());
+
+	// Out of silent mode
+
+	if (_debugSilence) {
+
+		debugSilence(false, false);
+	}
+}
+
+//////// Simple software debugger
+
+#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
 
 // Handle for debugger
 
@@ -1164,9 +2017,11 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 		boolean process = _debugSerialApp; // Always process for app
 
 #else
-		boolean process = false;
+		boolean process = _debugSerialApp && calledByHandleEvent; //false;
 #endif
 		debugGlobal_t *global = &_debugGlobals[g];
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
 		if (!process) {
 
@@ -1194,6 +2049,7 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 				}
 			}
 		}
+#endif
 
 		// Process ?
 
@@ -1252,9 +2108,13 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 		}
 	}
 
-	// Process watches
+	// Break ?
 
 	boolean hasBreak = false;
+
+#ifndef BOARD_LOW_MEMORY // Not for low memory boards
+
+	// Process watches
 
 	if (_debugWatchesAdded > 0 && _debugWatchesEnabled) {
 
@@ -1357,6 +2217,8 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 		}
 	}
 
+#endif
+
 	// Update old value for globals (after watch, to show old value correct
 
 	for (uint8_t g=0; g < _debugGlobalsAdded; g++) {
@@ -1384,6 +2246,8 @@ void debugHandleDebugger (boolean calledByHandleEvent) {
 		}
 	}
 }
+
+// Add a function
 
 int8_t debugAddFunctionVoid(const char* name, void (*callback)()) {
 
@@ -1424,7 +2288,6 @@ int8_t debugAddFunctionInt(const char* name, void (*callback)(int)) {
 	}
 	return pos;
 }
-#endif
 
 // For Flash F()
 
@@ -2465,135 +3328,8 @@ int8_t debugAddWatchCross(const __FlashStringHelper* globalName, uint8_t operati
 
 #endif // Not low memory board
 
+
 #endif // DEBUG_DISABLE_DEBUGGER
-
-// debugBreak - show a message and wait for response
-
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
-String debugBreak(String str, uint32_t timeout) {
-	return debugBreak(str.c_str(), timeout);
-}
-#endif
-
-String debugBreak() {
-
-	return debugBreak("", DEBUG_BREAK_TIMEOUT, false);
-
-}
-String debugBreak(const __FlashStringHelper *ifsh, uint32_t timeout, boolean byWatch) {
-
-	return debugBreak(String(ifsh).c_str(), timeout, byWatch);
-}
-
-String debugBreak(const char* str, uint32_t timeout, boolean byWatch) {
-
-	//D("debugBreak - timeout %u", timeout);
-
-	// Show a message
-
-	char appBreakType = '1';
-
-	if (strlen(str) > 0) { // String is informed ?
-
-		PRINTFLN(F("* %s"), str);
-
-	} else if (timeout == DEBUG_BREAK_TIMEOUT) { // Is called by debugBreak() and not for watches ?
-
-		Serial.println(F("* Press any key or command, and enter to continue"));
-		appBreakType = 'C';
-	}
-
-	if (_debugSerialApp) { // For DebugSerialApp connection ?
-
-		PRINTFLN(F("$app:B:%c:%c"), appBreakType, ((byWatch)?'W':' '));
-	}
-
-	// Response buffer
-
-	String response = "";
-
-	// Wait for response // Note: the Arduino will wait for it, to continue runs
-
-	uint32_t lastTime = millis(); 			// Time of last receipt
-	char last = ' ';						// Last char received
-
-	// Enter in silence (if is not yet)
-
-	boolean oldSilence = _debugSilence;		// In silence mode ?
-
-	if (!_debugSilence) {
-		debugSilence(true, false, true);
-	}
-
-	// Ignore buffer
-
-	while (Serial.available()) {
-		Serial.read();
-	}
-
-	// Process serial data (until timeout, if informed)
-
-	while (timeout == 0 ||
-			((millis() - lastTime) <= timeout)){
-
-		if (Serial.available()) {
-
-		    // Get the new char:
-
-		    char character = (char)Serial.read();
-
-		    // Clear buffer if is a long time of last receipt
-
-		    if (response.length() > 0 && (millis() - lastTime) > 2000) {
-		    	response = "";
-		    }
-		    lastTime = millis(); // Save it
-
-			// Newline (CR or LF) - once one time if (\r\n)
-
-			if (isCRLF(character) == true) {
-
-				if (isCRLF(last) == false) { // New line -> return the command
-
-					//D("break");
-
-					break;
-				}
-
-			} else if (isPrintable(character)) { // Only valid
-
-				// Concat
-
-				response.concat(character);
-			}
-
-			// Last char
-
-			last = character;
-		}
-
-		delay(10); // Give a time
-	}
-
-	if (_debugSerialApp) { // For DebugSerialApp connection ?
-
-		Serial.println(F("$app:B:0"));
-
-	}
-
-	// Is in silence ? (restore it)
-
-	if (_debugSilence && !oldSilence) {
-		debugSilence(false, false, true);
-	}
-
-	//D("response -> %s", response.c_str());
-
-	// Response (tolower always)
-	// response.toLowerCase();
-
-	return response;
-}
 
 /////// Private code (Note: this not starts with debug)
 
@@ -2674,13 +3410,11 @@ static int8_t addGlobal(const char* name, void* pointer, uint8_t type, uint8_t s
 	global.type = type;
 	global.showLength = showLength;
 
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 	if (type == DEBUG_TYPE_STRING) {
 		global.typeOld = DEBUG_TYPE_CHAR_ARRAY; // Store old value as char array
 	} else {
 		global.typeOld = type; // Same type
 	}
-#endif
 
 	_debugGlobals.push_back(global);
 
@@ -2711,13 +3445,11 @@ static int8_t addGlobal(const __FlashStringHelper* name, void* pointer, uint8_t 
 	global.type = type;
 	global.showLength = showLength;
 
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 	if (type == DEBUG_TYPE_STRING) {
 		global.typeOld = DEBUG_TYPE_CHAR_ARRAY; // Store old value as char array
 	} else {
 		global.typeOld = type; // Same type
 	}
-#endif
 
 	_debugGlobals.push_back(global);
 
@@ -2900,11 +3632,9 @@ static void processWatches(String& options) {
 				printSerialDebug();
 				Serial.println("Watches set to non stop");
 
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 				if (_debugSerialApp) { // App ?
 					PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
 				}
-#endif // BOARD_LOW_MEMORY
 
 			} else if (firstOption == "s") {
 
@@ -2915,11 +3645,9 @@ static void processWatches(String& options) {
 				printSerialDebug();
 				Serial.println("Watches set to stop");
 
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 				if (_debugSerialApp) { // ? App
 					PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
 				}
-#endif // BOARD_LOW_MEMORY
 
 			} else {
 
@@ -4036,6 +4764,8 @@ boolean getWatchOperation(String str, uint8_t* operation) {
 	}
 }
 
+#endif // Not low memory board
+
 // Aplly the operation between two *void pointers values
 
 static boolean apllyOperation(uint8_t type1, void* pointer1, uint8_t operation, uint8_t type2, void* pointer2) {
@@ -4786,8 +5516,6 @@ static boolean apllyOperation(uint8_t type1, void* pointer1, uint8_t operation, 
 	}
 }
 
-#endif // Not low memory board
-
 // Find a global variable added by name
 
 static boolean findGlobal (const char* globalName, uint8_t* globalNum, boolean sumOne) {
@@ -4971,8 +5699,8 @@ static void getStrValue(uint8_t type, void* pointer, uint8_t showLength, boolean
 
 static void updateValue(uint8_t typeFrom, void* pointerFrom, uint8_t typeTo, void** pointerTo) {
 
-	//D("updateValue from type=%u pointer=%p to type=%u pointer=%p",
-	//		typeFrom, pointerFrom, typeTo, *pointerTo);
+	D("updateValue from type=%u pointer=%p to type=%u pointer=%p",
+			typeFrom, pointerFrom, typeTo, *pointerTo);
 
 	if (!pointerFrom) {
 		printSerialDebug();
@@ -5182,16 +5910,19 @@ static void updateValue(uint8_t typeFrom, void* pointerFrom, uint8_t typeTo, voi
 					String temp = *(String*)pointerFrom;
 					size = temp.length();
 					//D("upd str temp %s size %d", temp.c_str(), size);
-					content = temp.c_str();
+					// Alloc memory for pointerValue and copy value
+					*pointerTo = malloc (size+1);
+					memset(*pointerTo, '\0', (size+1));
+					memcpy(*pointerTo, temp.c_str(), size);
 				} else {
 					content = (const char*)pointerFrom;
 					size = strlen(content);
+					// Alloc memory for pointerValue and copy value
+					*pointerTo = malloc (size+1);
+					memset(*pointerTo, '\0', (size+1));
+					memcpy(*pointerTo, content, size);
 				}
-				// Alloc memory for pointerValue and copy value
-				*pointerTo = malloc (size+1);
-				memset(*pointerTo, '\0', (size+1));
-				memcpy(*pointerTo, content, size);
-				//D("upd char* %s size %d", content, size);
+				//D("upd char* %s size %d", *pointerTo, size);
 			}
 			break;
 
@@ -5209,470 +5940,6 @@ static void updateValue(uint8_t typeFrom, void* pointerFrom, uint8_t typeTo, voi
 
 }
 
-// Process command receipt by serial (Arduino monitor, etc.)
-
-static void processCommand(String& command, boolean repeating, boolean showError) {
-
-	// Reduce information on error to support low memory boards
-	// Use a variable to reduce memory
-
-#if DEBUG_USE_FLASH_F
-
-	__FlashStringHelper* errorSintax = F("Invalid command. Use ? to show help");
-
-#else
-
-	const char* errorSintax = "Invalid command. Use ? to show help";
-
-#endif
-
-	//D(F("Command: %s last: %s"), command.c_str(), _debugLastCommand.c_str());
-
-	// Disable repeating
-
-	if (!repeating && _debugRepeatCommand) {
-		_debugRepeatCommand = false;
-	}
-
-	// Can repeat ?
-
-	boolean canRepeat = false;
-
-	// Extract options
-
-	String options = "";
-	int16_t pos = command.indexOf(' ');
-	if (pos > 0) {
-		options = command.substring(pos + 1);
-		command = command.substring(0, pos);
-	}
-
-	// Invalid
-
-	if (command.length() > DEBUG_MAX_SIZE_COMMANDS) {
-		printSerialDebug();
-		Serial.println(errorSintax);
-		return;
-	}
-
-	if (options.length() > DEBUG_MAX_SIZE_CMD_OPTIONS) {
-		printSerialDebug();
-		Serial.println(errorSintax);
-		return;
-	}
-
-	// Show command
-
-	if (command != "$app") {
-		printSerialDebug();
-		PRINTFLN(F("Command recv.: %s opt: %s"), command.c_str(), options.c_str());
-	}
-
-	// Verify if pass value between '"' - to avoid split the value in fields logic
-
-	boolean inMark = false;
-	char conv = 31;
-
-	for (uint8_t i=0; i<options.length(); i++) {
-
-		char c = options.charAt(i);
-
-		if (c == '"') {
-
-			inMark = !inMark;
-
-		} else {
-
-			if (c == ' ' && inMark) {
-				options.setCharAt(i, conv);
-			}
-		}
-	}
-
-	//D("opt -> %s", options.c_str());
-
-	// Process the command
-
-	if (command == "h" || command == "help" || command == "?") {
-
-		// Show help
-
-		showHelp();
-
-		// Do a break
-
-		String response = debugBreak("", DEBUG_BREAK_TIMEOUT, true);
-
-		if (response.length() > 0) { // Process command
-
-			processCommand(response, false);
-		}
-
-	} else if (command == "v") {
-
-		// Debug level
-
-		debugSetLevel(DEBUG_LEVEL_VERBOSE);
-
-	} else if (command == "d") {
-
-		// Debug level
-
-		debugSetLevel(DEBUG_LEVEL_DEBUG);
-
-	} else if (command == "i") {
-
-		// Debug level
-
-		debugSetLevel(DEBUG_LEVEL_INFO);
-
-	} else if (command == "w") {
-
-		// Debug level
-
-		debugSetLevel(DEBUG_LEVEL_WARN);
-
-	} else if (command == "e") {
-
-		// Debug level
-
-		debugSetLevel(DEBUG_LEVEL_ERROR);
-
-	} else if (command == "n") {
-
-		// Debug level
-
-		debugSetLevel(DEBUG_LEVEL_NONE);
-
-	} else if (command == "s") {
-
-		// Silence
-
-		debugSilence (!_debugSilence, true);
-
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
-
-	} else if (command == "p") {
-
-		// Show profiler with minimal time
-
-		if (options.length() == 0) {
-
-			// Show profiler
-
-			debugShowProfiler(!_debugShowProfiler, 0, true);
-
-		} else {
-
-			// With minimal time
-
-			if (strIsNum(options)) {
-
-				int32_t aux = options.toInt();
-
-				if (aux > 0) { // Valid number
-
-					// Show profiler
-
-					debugShowProfiler(true, aux, true);
-
-				}
-
-			} else {
-
-				printSerialDebug();
-				Serial.println(F("Invalid number in argument"));
-			}
-		}
-
-#endif // Not low memory board
-
-	} else if (command == "dbg") {
-
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
-
-		// Enable/disable the Simple Software Debugger
-
-		boolean saveWatchStop = _debugWatchStop;
-
-		if (_debugSerialApp) { // For DebugSerialApp connection ?
-
-			_debugWatchStop = false; // disable it for now
-
-		}
-
-		// Process
-
-		if (options == "on") {
-			_debugDebuggerEnabled = true;
-		} else if (options == "off") {
-			_debugDebuggerEnabled = false;
-		} else {
-			_debugDebuggerEnabled = !_debugDebuggerEnabled; // invert it
-		}
-
-		if (_debugSerialApp) { // For DebugSerialApp connection ?
-
-			// Debugger enabled ?
-
-			if (_debugDebuggerEnabled) {
-
-				// Process handle to update globals
-
-				debugHandleDebugger(true);
-
-				// Send debugger elements
-
-				printSerialDebug();
-				PRINTFLN(F("Sending debugger objects ..."));
-
-				// Send info
-
-				PRINTFLN(F("$app:D:")); // To clean arrays
-
-				String all="";
-
-				if (_debugFunctionsAdded > 0) {
-					showFunctions(all, false, true);
-				}
-
-				if (_debugGlobalsAdded > 0) {
-					showGlobals(all, false, true);
-				}
-
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
-
-				if (_debugWatchesAdded > 0) {
-					showWatches(all, true);
-				}
-
-#endif // BOARD_LOW_MEMORY
-
-				printSerialDebug();
-				PRINTFLN(F("End of sending."));
-
-			}
-
-			// Send status
-
-			PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
-
-			// Restore stop
-
-			_debugWatchStop = saveWatchStop;
-
-
-		}
-
-		printSerialDebug();
-		PRINTFLN(F("Simple software debugger: %s"), (_debugDebuggerEnabled) ? "On":"Off");
-
-#else
-		printSerialDebug();
-		Serial.println(F("Debugger is not enabled in your project"));
-
-#endif
-	} else if (command == "f") {
-
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
-
-		// Process
-
-		processFunctions(options);
-
-		canRepeat = true;
-#else
-		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
-
-#endif
-	} else if (command == "g") {
-
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
-
-		// Process
-
-		if (_debugDebuggerEnabled) {
-
-			processGlobals(options);
-
-			canRepeat = true;
-
-		} else {
-
-			printSerialDebug();
-			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
-		}
-
-#else
-		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
-
-#endif
-
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
-
-	} else if (command == "wa") {
-
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
-
-		// Process
-
-		if (_debugDebuggerEnabled) {
-
-			processWatches(options);
-
-		} else {
-
-			printSerialDebug();
-			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
-		}
-
-#else
-		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
-
-#endif
-
-#endif // Not low memory board
-
-	} else if (command == "m") {
-
-		int free = freeMemory();
-
-		if (free != -1) {
-
-			PRINTFLN(F("* Free Heap RAM: %d"), free);
-
-			canRepeat = true;
-
-			if (_debugSerialApp) { // For DebugSerialApp connection ?
-
-				PRINTFLN(F("$app:M:%d:"), free);
-			}
-
-		} else {
-
-			printSerialDebug();
-			Serial.println(F("This option is not implemented for this board"));
-		}
-
-	} else if (command == "reset" ) {
-
-#ifdef ARDUINO_ARCH_AVR
-
-		printSerialDebug();
-		Serial.println(F("Resetting ..."));
-
-		delay(1000);
-
-		// Reset
-
-		avrResetArduino();
-
-#elif defined ESP8266 || defined ESP32 // Only for Espressif boards
-
-		printSerialDebug();
-
-	#if defined ESP8266
-		Serial.println("Resetting the ESP8266 ...");
-	#elif defined ESP32
-		Serial.println("Resetting the ESP32 ...");
-	#endif
-
-		delay(1000);
-
-		// Reset
-
-		ESP.restart();
-
-#else
-		printSerialDebug();
-		Serial.println(F("No reset for this board"));
-
-#endif // ARDUINO_ARCH_AVR
-
-#if defined ESP8266 // Only to ESP8266
-
-	} else if (command == "cpu80") {
-
-		// Change ESP8266 CPU para 80 MHz
-
-		system_update_cpu_freq(80);
-		printSerialDebug();
-		Serial.println(F("CPU ESP8266 changed to: 80 MHz"));
-
-	} else if (command == "cpu160") {
-
-		// Change ESP8266 CPU para 160 MHz
-
-		system_update_cpu_freq(160);
-		printSerialDebug();
-		Serial.println(F("CPU ESP8266 changed to: 160 MHz"));
-
-#endif
-
-	} else if (command == "r") {
-
-		// Repeat last command
-
-		if (options == "?") { // Help
-
-			printSerialDebug();
-			Serial.println(F("Valid last commands to repeat: f|g|m"));
-
-		} else if (_debugLastCommand.length() == 0) {
-
-			printSerialDebug();
-			Serial.println(F("Last command not set or unsupported. use r ? to show help"));
-
-		} else { // Start repeats
-
-			printSerialDebug();
-			PRINTFLN(F("Start repeating command: %s - press any command or enter to stop"), _debugLastCommand.c_str());
-			_debugRepeatCommand = true;
-		}
-
-	} else if (command == "$app") {
-
-		// Connection with SerialDebugApp
-
-		D("$app -> %s", options.c_str());
-
-		debugSerialAppConnection();
-
-	} else {
-
-		// Command invalid
-
-		if (showError) {
-			printSerialDebug();
-			Serial.println(errorSintax);
-		}
-	}
-
-	// Can repeat ?
-
-	//D("canrepeat=%d", canRepeat);
-
-	if (!repeating) { // Not if repeating commands
-
-		if (canRepeat) {
-
-			// Save it
-
-			_debugLastCommand = command;
-			_debugLastCommand.concat(' ');
-			_debugLastCommand.concat(options);
-
-		} else if (!_debugRepeatCommand) {
-
-			// Clear it
-
-			_debugLastCommand = "";
-		}
-	}
-}
 
 #ifndef DEBUG_DISABLE_DEBUGGER
 
@@ -5692,7 +5959,7 @@ static void processFunctions(String& options) {
 
 	String option = (fields.size() >= 1)? fields.getString(1) : "";
 
-	D("procf opts=%s flds=%d opt=%s", options.c_str(), fields.size(), option.c_str());
+	//D("procf opts=%s flds=%d opt=%s", options.c_str(), fields.size(), option.c_str());
 
 	if (_debugFunctionsAdded > 0) {
 
@@ -6986,45 +7253,6 @@ static void changeGlobal(Fields& fields) {
 
 #endif // DEBUG_DISABLE_DEBUGGER
 
-// Show debug help
-
-static void showHelp() {
-
-	Serial.println('*');
-	printSerialDebug();
-	Serial.println();
-	Serial.print(F("* Version: "));
-	Serial.print(DEBUG_VERSION);
-	Serial.println();
-
-	Serial.print(F("* Arduino board: "));
-	Serial.print(BOARD);
-	Serial.println();
-
-	int free = freeMemory();
-
-	if (free != -1) {
-
-		PRINTFLN(F("* Free Heap RAM: %d"), free);
-	}
-
-#if defined ESP8266 || defined ESP32
-	PRINTFLN(F("* ESP SDK version: %s"), ESP.getSdkVersion());
-#endif
-
-	// Using PROGMEM in large strings (even for Espressif boards)
-
-	Serial.println(FPSTR(debugHelp));
-
-#ifdef ESP8266 // Esp8266 only (ESP32 not to easy to change it)
-
-	Serial.println(F("*    cpu80  -> ESP8266 CPU a 80MHz"));
-	Serial.println(F("*    cpu160 -> ESP8266 CPU a 160MHz"));
-
-#endif
-
-}
-
 // Remove quotation marks from string
 
 static void removeQuotation(String& string, boolean single) {
@@ -7050,130 +7278,7 @@ static void removeQuotation(String& string, boolean single) {
 	}
 }
 
-// Print SerialDebug begin for messages
-// Note: It is done to reduce Program memory consupmition - for low memory boards support
-
-static void printSerialDebug() {
-
-	Serial.print(F("* SerialDebug: "));
-}
-
-// Connection with SerialDebugApp
-
-static void debugSerialAppConnection() {
-
-	// Connected
-
-	_debugSerialApp = true;
-
-	// Send version, board, debugger disabled and  if is low or enough memory board
-
-	char features;
-	char dbgEnabled;
-
-	// Features
-
-#if defined DEBUG_DISABLE
-	fetaures = 'D'; // Disabeld
-#elif defined BOARD_LOW_MEMORY
-	features = 'L'; // Low
-#elif defined BOARD_ENOUGH_MEMORY
-	features = 'E'; // Enough
-#else
-	features = 'M'; // Medium
-#endif
-
-	// Debugger is enabled ?
-
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
-
-	dbgEnabled = 'E';
-
-	// Send debugger elements
-
-	if (_debugDebuggerEnabled) {
-
-		printSerialDebug();
-		PRINTFLN(F("Sending debugger objects ..."));
-
-		// Send info
-
-		PRINTFLN(F("$app:D:")); // To clean arrays
-
-		String all="";
-
-		if (_debugFunctionsAdded > 0) {
-			showFunctions(all, false, true);
-		}
-
-		if (_debugGlobalsAdded > 0) {
-			showGlobals(all, false, true);
-		}
-
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
-
-		if (_debugWatchesAdded > 0) {
-			showWatches(all, true);
-		}
-
-#endif // BOARD_LOW_MEMORY
-
-		printSerialDebug();
-		PRINTFLN(F("End of sending."));
-
-	}
-
-#else
-
-	dbgEnabled = 'D';
-
 #endif // DEBUG_DISABLE_DEBUGGER
-
-	// Send info
-
-	String version = String(DEBUG_VERSION);
-	String board = String(BOARD);
-
-	PRINTFLN(F("$app:V:%s:%s:%c:%d:%c"), version.c_str(), board.c_str(), features, freeMemory(), dbgEnabled);
-
-	// Send status
-
-#ifndef DEBUG_DISABLE_DEBUGGER // Only if debugger is enabled
-
-	// Send status of debugger
-
-	PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
-#endif
-
-	// Status of debug level
-
-	PRINTFLN(F("$app:L:%u"), _debugLevel);
-
-#ifndef BOARD_LOW_MEMORY // Not for low memory boards
-
-	// Status of nonstop
-
-	PRINTFLN(F("$app:W:s:%c"), ((_debugWatchStop)?'1':'0'));
-
-	// Status of debugger
-
-	PRINTFLN(F("$app:D:%u"), _debugDebuggerEnabled);
-
-#endif // BOARD_LOW_MEMORY
-
-	// Print message
-
-	printSerialDebug();
-	PRINTFLN(F("Conection with app - SerialDebug library version %s"), version.c_str());
-
-	// Out of silent mode
-
-	if (_debugSilence) {
-
-		debugSilence(false, false);
-	}
-}
-
 
 // Free memory
 
@@ -7220,8 +7325,8 @@ int freeMemory() {
 
 }
 
+#endif // DEBUG_MINIMUM
 
-#endif // DEBUG_DISABLE_DEBUGGER
 
 #endif // DEBUG_DISABLED
 
