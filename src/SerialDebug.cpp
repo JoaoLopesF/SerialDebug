@@ -526,8 +526,9 @@ static int freeMemory();
 static void printSerialDebug();
 
 /////// Prototypes - private
+
 #ifndef DEBUG_MINIMUM
-void debugSerialAppConnection();
+static void debugSerialAppConnection();
 #endif // DEBUG_MINIMUM
 
 /////// Defines (private)
