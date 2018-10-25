@@ -122,8 +122,10 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
   For the Mega, some features are reduced, but have watches.
 
-  If debugger is disabled in code, __SerialDebug__ in UNO,
-  consumes only about 150 bytes of memory.
+  If debugger is disabled in code,
+  or in mode mininum (default for low memory boards),
+   __SerialDebug__ in Uno,
+  consumes only about 50 bytes of memory.
   And it not fully otimized yet.
 
   The default speed of serial is 250000, for Espressif, ARM or Mega boards
