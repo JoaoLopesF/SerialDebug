@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.74-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.75-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -787,6 +787,10 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 - Error on use debug* macros with F(). workaround for now: print* macros is ok for it.
 
 ## Releases
+
+### 0.9.75 - 2018-10-25
+  
+    -  Few Adjustments (bug on declare prototype)
 
 ### 0.9.74 - 2018-10-25	
   

@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.75	2018-10-25		Few adjustments
  * 0.9.74	2018-10-25		Adjustments to SerialDebugApp show debugger info in App
  *                          Now low memory boards have debugger disabled by default, but enabled commands (debug level, help ...)
  *                          Create an mode minimum to low memory boards - only debug output enabled to save memory
@@ -124,8 +125,9 @@
 #endif
 
 // Version -- Note to JoaoLopesF -> not forgot change it in github repo and versoes.txt (for app)
+//                               -> Testing of low, medium e enough memory boards
 
-#define DEBUG_VERSION F("0.9.74")                   // Version of this library
+#define DEBUG_VERSION F("0.9.75")                   // Version of this library
 
 // Low memory board ?
 
