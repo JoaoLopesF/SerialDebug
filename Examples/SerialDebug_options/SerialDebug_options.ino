@@ -25,6 +25,12 @@
 // For it just uncomment the DEBUG_DISABLED
 #define DEBUG_DISABLED true
 
+// Minimum mode - only to show messages of debug
+// No commands from serial, no debugger, no printf
+// Minumum usage of memory RAM and program
+// Uncomment this, to use this mode
+//#define DEBUG_MINIMUM true
+
 // Disable SerialDebug debugger ? No more commands and features as functions and globals
 // Uncomment this to disable it 
 //#define DEBUG_DISABLE_DEBUGGER true
@@ -41,6 +47,7 @@
 
 // Disable auto function name (good if your debug yet contains it)
 //#define DEBUG_AUTO_FUNC_DISABLED true
+
 
 // Include SerialDebug
 

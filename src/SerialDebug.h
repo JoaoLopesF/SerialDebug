@@ -51,23 +51,25 @@
 // If you need more memory, can force it:
 //#define DEBUG_USE_FLASH_F true
 
+// Minimum mode - only to show messages of debug
+// No commands from serial, no debugger, no printf
+// Minimum usage of memory RAM and program
+// Uncomment this, to use this mode
+//#define DEBUG_MINIMUM true
+
 #ifdef BOARD_LOW_MEMORY // For boards with low memory
 
-// Disabling debugger for low memory boards - 2018-10-25
-// Uncomment if you want try it - but for now, it consumes much program space for this boards
-#define DEBUG_DISABLE_DEBUGGER true
+	// Minimum mode, default for low memory - only to show messages of debug
+	// Uncomment this, if not want to use this mode
+	#define DEBUG_MINIMUM true
 
-// Mode minimum - only to show messages of debug
-// No commands from serial, no debugger, no printf
-// Minumum usage of memory RAM and program
-// Comment this, if not want to use this mode
-#define DEBUG_MINIMUM true
+#endif
 
-	#ifdef DEBUG_MINIMUM // For minumum mode - debugger always disabled
-		#define DEBUG_DISABLE_DEBUGGER true
-	#endif
+// For minimum mode - debugger always disabled
 
-#endif // BOARD_LOW_MEMORY
+#ifdef DEBUG_MINIMUM
+	#define DEBUG_DISABLE_DEBUGGER true
+#endif
 
 // TODO: see it
 

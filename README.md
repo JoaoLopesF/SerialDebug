@@ -11,6 +11,7 @@ or call a function, in runtime, using serial monitor or SerialDebugApp.
 ## Contents
 
 - [About](#about)
+- [News](#news)
 - [Beta version](#beta-version)
 - [Github](#github)
 - [Benefits](#benefits)
@@ -19,6 +20,7 @@ or call a function, in runtime, using serial monitor or SerialDebugApp.
 - [Commands](#commands)
 - [Install](#install)
 - [Usage](#usage)
+- [Options](#options)
 - [Watches](#watches)
 - [Khow issues](#khow-issues)
 - [Releases](#releases)
@@ -37,6 +39,16 @@ __SerialDebug__ is a library to Improved serial debugging and simple software de
 
 Yes, now we can use one debugger, simple but functional,
 and not need a extra hardware to do it.
+
+## News
+
+### 2018-10-26
+
+  - Now the [__SerialDebugApp__](#serialdebugapp) show debugger elements on screen, please update to 0.9.2 to see it in action
+
+  - In library version >= 0.9.75, have a new _minimum_ mode, to limit to only output debugs,
+    no debugger, no printf, no extra functions or processing on library. 
+    And by default, low memory boards, as Uno, is in _minimum_ mode.
 
 ## Beta version
 
@@ -803,7 +815,7 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
     - Adjustments to SerialDebugApp show debugger info in App
     - Now low memory boards have debugger disabled by default, but enabled commands (debug level, help ...)
     - Create an mode minimum to low memory boards - only debug output enabled to save memory
-    
+
 ### 0.9.73 - 2018-10-24
 
     - Adjustments to SerialDebugApp show debugger panel in App
