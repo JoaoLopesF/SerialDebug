@@ -6,7 +6,7 @@
 
 Improved serial debugging to Arduino, with simple software debugger,
 to see/change global variables, to add watch for these variables,
-or call a function, in runtime, using serial monitor.
+or call a function, in runtime, using serial monitor or SerialDebugApp.
 
 ## Contents
 
@@ -374,6 +374,8 @@ __SerialDebug__ in Arduino serial monitor:
 __SerialDebug__ in __SerialDebugApp__:
 
 [![Youtube](https://img.youtube.com/vi/ba_eu06mkng/0.jpg)](https://www.youtube.com/watch?v=ba_eu06mkng)
+
+[![Youtube](https://img.youtube.com/vi/C4qRwwjyZwg/0.jpg)](https://www.youtube.com/watch?v=C4qRwwjyZwg)
 
 ## Commands
 
