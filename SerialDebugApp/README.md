@@ -14,7 +14,7 @@ If dont want use this freeware, just use default serial monitor of Arduino IDE.
 - [About](#about)
 - [Beta version](#beta-version)
 - [Github](#github)
-- [How it looks](#how-it-looks-1)
+- [How it looks](#how-it-looks)
 - [Install](#install)
 - [Release](#releases)
 
