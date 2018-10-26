@@ -387,6 +387,8 @@ __SerialDebug__ in __SerialDebugApp__:
 
 [![Youtube](https://img.youtube.com/vi/ba_eu06mkng/0.jpg)](https://www.youtube.com/watch?v=ba_eu06mkng)
 
+__SerialDebug__ in __SerialDebugApp__, with simple software debugger on screen:
+
 [![Youtube](https://img.youtube.com/vi/C4qRwwjyZwg/0.jpg)](https://www.youtube.com/watch?v=C4qRwwjyZwg)
 
 ## Commands
