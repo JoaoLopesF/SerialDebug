@@ -7,6 +7,11 @@ __SerialDebugApp__ is a freeware desktop app, companion for __SerialDebug__ libr
 
 Note: the open source __SerialDebugApp__ library is not depending on this software.
 
+Why this app is an freeware and not open source ?
+
+This app is based in my another commercial projects,
+through the serial port, control devices with the Arduino.
+
 If dont want use this freeware, just use default serial monitor of Arduino IDE.
 
 # Contents
