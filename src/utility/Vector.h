@@ -34,7 +34,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <arduino.h>
+#include <Arduino.h>
 
 //* Begin change by JoaoLopesF
 //#define INT int

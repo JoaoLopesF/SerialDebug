@@ -10,7 +10,7 @@
 
 ///// Includes
 
-#include <arduino.h>
+#include <Arduino.h>
 
 #include <utility/Fields.h>
 #include <utility/Util.h>
