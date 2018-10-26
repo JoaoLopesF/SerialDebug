@@ -804,6 +804,11 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Releases
 
+### 0.9.77 - 2018-10-26
+  
+    - Adjustments for minimum mode
+    - #include stdarg, to avoid error in Arduino IDE 1.8.5 and Linux - thanks to @wd5gnr
+
 ### 0.9.76 - 2018-10-26
 
     -	#includes for Arduino.h corrected to work in Linux (case sensitive F.S.) - thanks @wd5gnr
