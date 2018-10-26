@@ -15,7 +15,7 @@ or call a function, in runtime, using serial monitor or SerialDebugApp.
 - [Github](#github)
 - [Benefits](#benefits)
 - [SerialDebugApp](#serialdebugapp)
-- [How it looks](#how-it-looks-1)
+- [How it looks](#how-it-looks)
 - [Commands](#commands)
 - [Install](#install)
 - [Usage](#usage)
