@@ -59,6 +59,8 @@ And please join in the Gitter chat room ([SerialDebugApp on Gitter](https://gitt
 
 [![Youtube](https://img.youtube.com/vi/ba_eu06mkng/0.jpg)](https://www.youtube.com/watch?v=ba_eu06mkng)
 
+[![Youtube](https://img.youtube.com/vi/C4qRwwjyZwg/0.jpg)](https://www.youtube.com/watch?v=C4qRwwjyZwg)
+
 ## Install
 
 Please download the __SerialDebugApp__:
