@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.76-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.77-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -47,7 +47,7 @@ and not need a extra hardware to do it.
   - Now the [__SerialDebugApp__](#serialdebugapp) show debugger elements on screen, please update to 0.9.2 to see it in action
 
   - In library version >= 0.9.75, have a new _minimum_ mode, to limit to only output debugs,
-    no debugger, no printf, no extra functions or processing on library. 
+    no debugger, no printf, no extra functions or processing on library.
     And by default, low memory boards, as Uno, is in _minimum_ mode.
 
 ## Beta version
