@@ -4,7 +4,7 @@
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
-Improved serial debugging to Arduino, with simple software debugger,
+Improved serial debugging to Arduino, with with debug levels and simple software debugger,
 to see/change global variables, to add watch for these variables,
 or call a function, in runtime, using serial monitor or SerialDebugApp.
 
