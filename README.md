@@ -792,7 +792,7 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ### 0.9.76 - 2018-10-26
 
-    -	#includes for Arduino.h corrected to work in Linux (case insensitive F.S.) - thanks @wd5gnr
+    -	#includes for Arduino.h corrected to work in Linux (case sensitive F.S.) - thanks @wd5gnr
 
 ### 0.9.75 - 2018-10-25
   

@@ -7,7 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
- * 0.9.76	2018-10-26		#includes for Arduino.h corrected to work in Linux (case insensitive F.S.) - thanks @wd5gnr
+ * 0.9.76	2018-10-26		#includes for Arduino.h corrected to work in Linux (case sensitive F.S.) - thanks @wd5gnr
  * 0.9.75	2018-10-25		Few adjustments
  * 0.9.74	2018-10-25		Adjustments to SerialDebugApp show debugger info in App
  *                          Now low memory boards have debugger disabled by default, but enabled commands (debug level, help ...)
