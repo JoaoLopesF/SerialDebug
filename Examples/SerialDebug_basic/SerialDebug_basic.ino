@@ -7,6 +7,25 @@
 //
 // Basic example to show how to use it.
 //
+// Example of use:
+//
+//   print macros:
+//
+//		printA(F("This is a always - var "));
+//		printlnA(var);
+//		printV(F("This is a verbose - var "));
+//		printlnV(var);
+//		printD(F("This is a debug - var "));
+//		printlnD(var);
+//		printI(F("This is a information - var "));
+//		printlnI(var);
+//		printW(F("This is a warning - var "));
+//		printlnW(var);
+//		printE(F("This is a error - var "));
+//		printlnE(var);
+//
+//		printlnV("This not have args");
+//
 ///////
 
 ////// Includes

@@ -9,6 +9,25 @@
 //
 // Example of use:
 //
+//   print macros:
+//
+//		printA(F("This is a always - var "));
+//		printlnA(var);
+//		printV(F("This is a verbose - var "));
+//		printlnV(var);
+//		printD(F("This is a debug - var "));
+//		printlnD(var);
+//		printI(F("This is a information - var "));
+//		printlnI(var);
+//		printW(F("This is a warning - var "));
+//		printlnW(var);
+//		printE(F("This is a error - var "));
+//		printlnE(var);
+//
+//		printlnV("This not have args");
+//
+// 	debug macros (printf formatting):
+//
 //		debugA("This is a always - var %d", var);
 //
 //		debugV("This is a verbose - var %d", var);
@@ -49,7 +68,14 @@
 #include "SerialDebug.h" //https://github.com/JoaoLopesF/SerialDebug
 
 #ifdef DEBUG_MINIMUM
-#error "For mode minimum, please open the basic example"
+#error "For mode minimum, please open the basic example or disable this mode"
+// If this error occurs, your board is a low memory board,
+// and for this, the default is mininum mode,
+// to especially to reduce program memory (flash)
+// You can do it:
+// - Open the basic example, or
+// - Use this Advanced/Avr example,
+//   and comment the DEBUG_MININUM in SerialDebug.h - line 64
 #endif
 
 ////// Variables
