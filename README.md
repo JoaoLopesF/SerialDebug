@@ -1,6 +1,6 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.78-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.79-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
@@ -631,7 +631,8 @@ debugAddGlobalInt("mIntArray[3]", &mIntArray[3]);
 debugAddGlobalInt("mIntArray[4]", &mIntArray[4]);
 
 ```
-In future, we can have a converter that read code and generate this entries.
+
+Note: Has a converter to do it for You: [SerialDebugConverter](https://github.com/JoaoLopesF/SerialDebugConverter)
 
 And for __watches__ (not for low memory boards, as UNO):
 
@@ -655,8 +656,6 @@ debugAddWatchUInt8_t("mRunMinutes", DEBUG_WATCH_GREAT, 3);
 
 debugAddWatchCross("mRunMinutes", DEBUG_WATCH_EQUAL, "mRunSeconds");
 ```
-
-Note: Has a converter to do it for You: [SerialDebugConverter](https://github.com/JoaoLopesF/SerialDebugConverter)
 
 ### loop
 
@@ -803,6 +802,10 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 - Error on use debug* macros with F(). workaround for now: print* macros is ok for it.
 
 ## Releases
+
+### 0.9.79 - 2018-11-06
+  
+    - Examples and README update
 
 ### 0.9.78 - 2018-10-28
   

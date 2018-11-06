@@ -262,15 +262,15 @@ void setup() {
 
 	// Watch -> mBoolean when changed (put 0 on value)
 
-	debugAddWatchBoolean("mBoolean", DEBUG_WATCH_CHANGED, 0);
+	debugAddWatchBoolean(F("mBoolean"), DEBUG_WATCH_CHANGED, 0);
 
 	// Watch -> mRunSeconds == 10
 
-	debugAddWatchInt("mRunSeconds", DEBUG_WATCH_EQUAL, 10);
+	debugAddWatchInt(F("mRunSeconds"), DEBUG_WATCH_EQUAL, 10);
 
 	// Watch -> mRunMinutes == mRunSeconds (just for test)
 
-	debugAddWatchCross("mRunMinutes", DEBUG_WATCH_EQUAL, "mRunSeconds");
+	debugAddWatchCross(F("mRunMinutes"), DEBUG_WATCH_EQUAL, F("mRunSeconds"));
 
 #endif
 
