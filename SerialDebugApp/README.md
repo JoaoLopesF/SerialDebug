@@ -84,7 +84,7 @@ Installers:
 
 - Linux
 
-    For linux yet not have an installer (due issues on JavaPackager :-( )
+    For Linux yet not have an installer (due issues on JavaPackager :-( )
 
     For now please download and use the jar file (see below)
 
