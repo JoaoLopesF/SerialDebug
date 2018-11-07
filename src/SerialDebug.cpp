@@ -7,6 +7,8 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.79	2018-11-07		Update examples
+ * 0.9.78	2018-10-28		Update examples
  * 0.9.77	2018-10-26		Adjustments for minimum mode
  * 							#include stdarg, to avoid error in Arduino IDE 1.8.5 and Linux - thanks to @wd5gnr
  * 0.9.76	2018-10-26		#includes for Arduino.h corrected to work in Linux (case sensitive F.S.) - thanks @wd5gnr
@@ -134,7 +136,7 @@
 // Version -- Note to JoaoLopesF -> not forgot change it in github repo and versoes.txt (for app)
 //                               -> Testing of low, medium e enough memory boards
 
-#define DEBUG_VERSION F("0.9.77")                   // Version of this library
+#define DEBUG_VERSION F("0.9.79")                   // Version of this library
 
 // Low memory board ?
 

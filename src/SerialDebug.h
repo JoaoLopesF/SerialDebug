@@ -89,7 +89,7 @@ typedef enum {
 typedef enum {										// Type of operator
 	DEBUG_WATCH_CHANGED,							// Changed value ?
 	DEBUG_WATCH_EQUAL,								// Equal (==)
-	DEBUG_WATCH_DIFF,								// Diferent (!=)
+	DEBUG_WATCH_DIFF,								// Different (!=)
 	DEBUG_WATCH_LESS,								// Less (<=)
 	DEBUG_WATCH_GREAT,								// Greater (>)
 	DEBUG_WATCH_LESS_EQ,							// Less or equal (<=)

@@ -33,9 +33,13 @@ This have some improvements:
 
 - Have buttons to most of __commands__ of __SerialDebug__
 
-- It have themes, light and dark themes.
+- Have __themes__, light and dark themes.
 
-- And more, filter, auto-disconnection, converter, etc.
+- Have a __auto-disconnection__ feature.
+  If you leave app, e.g Cmd-Tab/Alt-Tab to switch to Arduino IDE,
+  the app will disconnect from serial port, to allow a new upload.
+
+- And more, e.g. filter, converter, etc.
 
 Note: Professional debug/logging have levels and it is show with colors,
 to differentiate messages.
@@ -88,7 +92,10 @@ Installers:
 
     [Download PKG installer](http://joaolopesf.net/downloads/serialdebugapp/macosx/SerialDebugApp.pkg.zip)
 
-    This installer will create app in MacOSX Applications
+    This installer will create app in MacOSX Applications.
+    Note: for this, you need provider superuser login. If you not have it, can use Java jar runnable.
+    Tip: to run you can do it: command+space serialdebugapp and enter.
+
 
 Or:
 
@@ -96,7 +103,7 @@ Or:
 
     [Download runnable Java jar file](http://joaolopesf.net/downloads/serialdebugapp/SerialDebugApp.jar.zip)
 
-    Just unzip and run.
+    Just unzip, copy to any directory and run.
 
 ## Releases
 

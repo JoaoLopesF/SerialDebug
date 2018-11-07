@@ -200,7 +200,6 @@ void setup() {
     	debugSetLastFunctionDescription("To benchmarks all Serial");
     }
 
-
     if (debugAddFunctionStr("funcArgStr", &funcArgStr) >= 0) {
     	debugSetLastFunctionDescription("To run with String arg");
     }
