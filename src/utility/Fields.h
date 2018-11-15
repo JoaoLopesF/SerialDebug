@@ -1,5 +1,6 @@
 /*
- * fields.h
+ * Fields.h
+ *
  */
 
 #ifndef UTIL_FIELDS_H_

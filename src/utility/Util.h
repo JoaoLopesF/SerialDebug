@@ -1,5 +1,6 @@
 /*
- * util.h
+ * Util.h
+ *
  */
 
 #ifndef UTIL_UTIL_H_
