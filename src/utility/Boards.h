@@ -1,8 +1,6 @@
 /*
- * boards.h
+ * Boards.h
  *
- *  Created on: 11 de set de 2018
- *      Author: Ararekan
  */
 
 #ifndef LIBRARIES_SERIALDEBUG_UTILITY_BOARDS_H_
