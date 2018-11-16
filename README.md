@@ -1,12 +1,15 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.80-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.81-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 <a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
 Improved serial debugging to Arduino, with with debug levels and simple software debugger,
 to see/change global variables, to add watch for these variables,
 or call a function, in runtime, using serial monitor or SerialDebugApp.
+
+[![randomnerdtutorials](http://joaolopesf.net/images/serialdebugapp/Serial-debug-app.jpg)](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)
+_Note: This image is from the tutorial for this library at [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)_
 
 ## Contents
 
@@ -22,6 +25,7 @@ or call a function, in runtime, using serial monitor or SerialDebugApp.
 - [Usage](#usage)
 - [Options](#options)
 - [Watches](#watches)
+- [Tutorial](#tutorial)
 - [Khow issues](#khow-issues)
 - [Releases](#releases)
 - [Links](#links)
@@ -41,6 +45,12 @@ Yes, now we can use one debugger, simple but functional,
 and not need a extra hardware to do it.
 
 ## News
+
+### 2018-11-16
+
+  - Now the __SerialDebug__ print macros support the second argument of Serial.print.
+    Thanks to @wjwieland to open a issue about this.
+    E.g.: printlnA(10, HEX);
 
 ### 2018-10-26
 
@@ -797,11 +807,22 @@ How this works, without a real hardware debugger? :
 
 This is done before each _debug*_ show messages or in _debugHandle_ function.
 
+## Tutorial
+
+Have a nice tutorial about __SerialDebug__ in [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/).
+
+Please access this tutorial, to give more information about how use __SerialDebug__ and __SerialDebugApp__.
+
 ## Khow issues
 
 - Error on use debug* macros with F(). workaround for now: print* macros is ok for it.
 
 ## Releases
+
+### 0.9.81 - 2018-11-16
+
+    - print macros now support second arg, e.g.: printlnA(10, HEX);
+      thanks to @wjwieland to open a issue about this.
 
 ### 0.9.80 - 2018-11-15
 

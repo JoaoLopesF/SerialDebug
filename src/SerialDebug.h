@@ -751,38 +751,38 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 
 #ifndef DEBUG_AUTO_FUNC_DISABLED
 
-	#define printLevel(level, x) { \
+	#define printLevel(level, x, ...) { \
 		if (_debugPrintIsNewline) { \
 			debugPrintInfo(level, __func__); \
 			_debugPrintIsNewline = false; \
 		} \
-		Serial.print(x); \
+		Serial.print(x, ##__VA_ARGS__); \
 	}
 
-	#define printlnLevel(level, x) { \
+	#define printlnLevel(level, x, ...) { \
 		if (_debugPrintIsNewline) { \
 			debugPrintInfo(level, __func__); \
 		} \
-		Serial.println(x); \
+		Serial.println(x, ##__VA_ARGS__); \
 		_debugPrintIsNewline = true; \
 	}
 
 
 #else
 
-	#define printLevel(level, x) { \
+	#define printLevel(level, x, ...) { \
 		if (_debugPrintIsNewline) { \
 			debugPrintInfo(level, 0); \
 			_debugPrintIsNewline = false; \
 		} \
-		Serial.print(x); \
+		Serial.print(x, ##__VA_ARGS__); \
 	}
 
-	#define printlnLevel(level, x) { \
+	#define printlnLevel(level, x, ...) { \
 		if (_debugPrintIsNewline) { \
 			debugPrintInfo(level, 0); \
 		} \
-		Serial.println(x); \
+		Serial.println(x, ##__VA_ARGS__); \
 		_debugPrintIsNewline = true; \
 	}
 
@@ -790,25 +790,25 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 
 // Always
 
-#define printA(x) if (!_debugSilence)									 		printLevel('A', x)
-#define printlnA(x) if (!_debugSilence)									 		printlnLevel('A', x)
+#define printA(x, ...) 		if (!_debugSilence)									 		printLevel('A', x, ##__VA_ARGS__)
+#define printlnA(x, ...) 	if (!_debugSilence)									 		printlnLevel('A', x, ##__VA_ARGS__)
 
 // With level
 
-#define printV(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_VERBOSE) 	printLevel('V', x)
-#define printD(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_DEBUG) 		printLevel('D', x)
-#define printI(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_INFO) 		printLevel('I', x)
-#define printW(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_WARN) 		printLevel('W', x)
+#define printV(x, ...) 		if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_VERBOSE) 	printLevel('V', x, ##__VA_ARGS__)
+#define printD(x, ...) 		if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_DEBUG) 	printLevel('D', x, ##__VA_ARGS__)
+#define printI(x, ...) 		if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_INFO) 		printLevel('I', x, ##__VA_ARGS__)
+#define printW(x, ...) 		if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_WARN) 		printLevel('W', x, ##__VA_ARGS__)
 
-#define printlnV(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_VERBOSE) 	printlnLevel('V', x)
-#define printlnD(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_DEBUG) 	printlnLevel('D', x)
-#define printlnI(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_INFO) 		printlnLevel('I', x)
-#define printlnW(x) if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_WARN) 		printlnLevel('W', x)
+#define printlnV(x, ...) 	if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_VERBOSE) 	printlnLevel('V', x, ##__VA_ARGS__)
+#define printlnD(x, ...) 	if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_DEBUG) 	printlnLevel('D', x, ##__VA_ARGS__)
+#define printlnI(x, ...) 	if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_INFO) 		printlnLevel('I', x, ##__VA_ARGS__)
+#define printlnW(x, ...) 	if (!_debugSilence && _debugLevel >= DEBUG_LEVEL_WARN) 		printlnLevel('W', x, ##__VA_ARGS__)
 
 // For errors (always showed)
 
-#define printE(x) if (!_debugSilence) 											printLevel('E', x)
-#define printlnE(x) if (!_debugSilence) 										printlnLevel('E', x)
+#define printE(x, ...) 		if (!_debugSilence) 										printLevel('E', x, ##__VA_ARGS__)
+#define printlnE(x, ...) 	if (!_debugSilence) 										printlnLevel('E', x, ##__VA_ARGS__)
 
 #endif // DEBUG_DISABLED
 
