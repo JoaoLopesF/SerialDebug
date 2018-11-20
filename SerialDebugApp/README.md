@@ -103,6 +103,8 @@ Or:
 
     [Download runnable Java jar file](http://joaolopesf.net/downloads/serialdebugapp/SerialDebugApp.jar.zip)
 
+    This needs a java runtime version 1.8.0 or newer.
+
     Just unzip, copy to any directory and run.
 
 ## Releases
