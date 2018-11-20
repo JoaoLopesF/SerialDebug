@@ -9,8 +9,7 @@ to see/change global variables, to add watch for these variables,
 or call a function, in runtime, using serial monitor or SerialDebugApp.
 
 [![randomnerdtutorials](http://joaolopesf.net/images/serialdebugapp/Serial-debug-app.jpg)](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)
-_Note: This image is from the tutorial for this library at [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)_
-
+_Note: This image is from the tutorial for this library at [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/) - Image by Sara Santos_
 ## Contents
 
 - [About](#about)
@@ -809,7 +808,11 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 ## Tutorial
 
-Have a nice tutorial about __SerialDebug__ in [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/).
+Have a nice tutorial about __SerialDebug__ in [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/):
+
+  - Better Debugging for Arduino IDE: SerialDebug Library (Part 1): [access part 1](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)
+  - Better Debugging for Arduino IDE using Software Debugger (Part 2): [access part 2](https://randomnerdtutorials.com/software-debugger-arduino-ide-serialdebug-library/)
+  - Better Debugging for Arduino IDE: SerialDebugApp (Part 3): [access part 3](https://randomnerdtutorials.com/software-debugger-arduino-ide-serialdebug-library/)
 
 Please access this tutorial, to give more information about how use __SerialDebug__ and __SerialDebugApp__.
 
