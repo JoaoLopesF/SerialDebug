@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/JoaoLopesF/SerialDebug.git"
   },
-  "version": "0.9.81",
+  "version": "0.9.82",
   "frameworks": "arduino",
   "platforms": "*"
 }

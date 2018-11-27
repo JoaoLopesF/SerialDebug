@@ -7,7 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
- * 0.9.82	2018-11-16		corrected bug on debugHandleEvent
+ * 0.9.82	2018-11-25		corrected bug on debugHandleEvent
  * 0.9.81	2018-11-16		print macros now support second arg, e.g.: printlnA(10, HEX);
  * 							thanks to @wjwieland to open a issue about this.
  * 0.9.80	2018-11-15		Few adjustments in header files
