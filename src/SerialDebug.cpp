@@ -7,6 +7,7 @@
  * 			   Note: This lybrary not use tasks, when for ESP32, due avoid serial output mixed
  * Versions  :
  * ------ 	---------- 		-------------------------
+ * 0.9.82	2018-11-16		corrected bug on debugHandleEvent
  * 0.9.81	2018-11-16		print macros now support second arg, e.g.: printlnA(10, HEX);
  * 							thanks to @wjwieland to open a issue about this.
  * 0.9.80	2018-11-15		Few adjustments in header files
@@ -139,7 +140,7 @@
 // Version -- Note to JoaoLopesF -> not forgot change it in github repo and versoes.txt (for app)
 //                               -> Testing of low, medium e enough memory boards
 
-#define DEBUG_VERSION F("0.9.81")                   // Version of this library
+#define DEBUG_VERSION F("0.9.82")                   // Version of this library
 
 // Low memory board ?
 
@@ -952,6 +953,8 @@ void debugHandleEvent(boolean calledByHandleEvent) {
 
 	if (diffTime >= DEBUG_MIN_TIME_EVENT) { // For this minimum time
 
+//		D("diffTime = %u", diffTime);
+
 		// Repeating commands ?
 
 		if (_debugRepeatCommand && _debugLastCommand.length() > 0) {
@@ -976,12 +979,12 @@ void debugHandleEvent(boolean calledByHandleEvent) {
 	#endif
 		}
 #endif // DEBUG_DISABLE_DEBUGGER
+
+		// Save time
+
+	    lastTime = millis();
+
 	}
-
-	// Save time
-
-    lastTime = millis();
-
 }
 
 // Profiler

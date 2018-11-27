@@ -6,6 +6,7 @@
 #ifndef LIBRARIES_SERIALDEBUG_UTILITY_BOARDS_H_
 #define LIBRARIES_SERIALDEBUG_UTILITY_BOARDS_H_
 
+// TODO: see ARDUINO_BOARD
 // AVR Unsupported boards - based on avr_cpunames.h
 
 #ifdef ARDUINO_ARCH_AVR
