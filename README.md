@@ -24,7 +24,8 @@ _Note: This image is from the tutorial for this library at [randomnerdtutorials.
 - [Usage](#usage)
 - [Options](#options)
 - [Watches](#watches)
-- [Tutorial](#tutorial)
+- [Install](#install)
+- [Converter](#converter)
 - [Khow issues](#khow-issues)
 - [Releases](#releases)
 - [Links](#links)
@@ -641,8 +642,6 @@ debugAddGlobalInt("mIntArray[4]", &mIntArray[4]);
 
 ```
 
-Note: Has a converter to do it for You: [SerialDebugConverter](https://github.com/JoaoLopesF/SerialDebugConverter)
-
 And for __watches__ (not for low memory boards, as UNO):
 
 ```cpp
@@ -679,6 +678,10 @@ debugAddWatchCross("mRunMinutes", DEBUG_WATCH_EQUAL, "mRunSeconds");
 debugHandle();
 
 ```
+
+### converter
+
+Note: Has a converter to do it for You: [SerialDebugConverter](https://github.com/JoaoLopesF/SerialDebugConverter)
 
 ### How use __SerialDebug__ macros
 
