@@ -1,7 +1,11 @@
 # SerialDebug Library for Arduino
 
-<a href="#releases">![build badge](https://img.shields.io/badge/version-v0.9.82-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
-<a href="https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
+![logo](extras/readme_media/logo.png)
+
+[![build badge](https://img.shields.io/badge/version-v0.9.82-blue.svg)](#releases) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
+[![platform badge](https://img.shields.io/badge/platform-Arduino_Espressif-orange.svg)](https://github.com/arduino)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/JoaoLopesF/SerialDebug/issues)
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
 Improved serial debugging to Arduino, with with debug levels and simple software debugger,
@@ -10,6 +14,7 @@ or call a function, in runtime, using serial monitor or SerialDebugApp.
 
 [![randomnerdtutorials](http://joaolopesf.net/images/serialdebugapp/Serial-debug-app.jpg)](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)
 _Note: This image is from the tutorial for this library at [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/) - Image by Sara Santos_
+
 ## Contents
 
 - [About](#about)
@@ -48,21 +53,21 @@ and not need a extra hardware to do it.
 
 ### 2018-11-16
 
-  - Now the __SerialDebug__ print macros support the second argument of Serial.print.
+- Now the __SerialDebug__ print macros support the second argument of Serial.print.
     Thanks to @wjwieland to open a issue about this.
     E.g.: printlnA(10, HEX);
 
 ### 2018-10-26
 
-  - Now the [__SerialDebugApp__](#serialdebugapp) show debugger elements on screen, please update to 0.9.2 to see it in action
+- Now the [__SerialDebugApp__](#serialdebugapp) show debugger elements on screen, please update to 0.9.2 to see it in action
 
-  - In library version >= 0.9.75, have a new _minimum_ mode, to limit to only output debugs,
-    no debugger, no printf, no extra functions or processing on library.
-    And by default, low memory boards, as Uno, is in _minimum_ mode.
+- In library version >= 0.9.75, have a new _minimum_ mode, to limit to only output debugs,
+  no debugger, no printf, no extra functions or processing on library.
+  And by default, low memory boards, as Uno, is in _minimum_ mode.
 
 ## Beta version
 
-This is a beta version. 
+This is a beta version.
 Not yet fully tested, optimized, and documented.
 
 This is a previous documentation.
@@ -72,14 +77,14 @@ It will be better documented before first RC version.
 
 Contribute to this library development by creating an account on GitHub.
 
-Please give a star, if you find this library usefull, 
+Please give a star, if you find this library usefull,
 this help a another people, discover it too.
 
 Please add a issue for problems or suggestion.
 
 And please join in the Gitter chat room ([SerialDebug on Gitter](https://gitter.im/SerialDebug/Public)).
 
-I suggest you use a Github Desktop New app to clone, 
+I suggest you use a Github Desktop New app to clone,
 it help to keep updated.
 
 ## Benefits
@@ -153,7 +158,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   The default speed of serial is 250000, for Espressif, ARM or Mega boards
   and 115200 for UNO, Leonardo, etc.
 
-  Only exception is boards with Tiny* AVR MCU, 
+  Only exception is boards with Tiny* AVR MCU,
   due it not have CPU and memory to this library.
 
 - Have __debug levels__
@@ -260,14 +265,17 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   For example:
 
   ```cpp
+
     Serial.print("*** Example - varA = ");
     Serial.print(varA);
     Serial.print(" varB =  ");
     Serial.print(varB);
     Serial.print(" varC =  ");
     Serial.print(varC);
-    Serial.println(); 
+    Serial.println();
+
   ```
+
   Can be converted to a single command:
 
   ```cpp
@@ -287,10 +295,12 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   debugD("a * c = %d", (a * c)); // multiply
   debugD("c / b = %d", (c / b)); // divide
   debugD("b - c = %d", (b - c)); // subtract
+
   ```
+
   Note: 50% less code
 
-  Note: With __debug*__ macros, __SerialDebug__ follows the same concept, 
+  Note: With __debug*__ macros, __SerialDebug__ follows the same concept,
   that modern debug/logging messages model,
   as ESP-IDF, Android, iOS, etc.
   In these, each call generates a formatted output line.
@@ -336,7 +346,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
     See about __SerialDebug__ commands below.
 
-- Have a simple __software debugger__ 
+- Have a simple __software debugger__
 
   This starts disabled, to avoid extra overhead.
 
@@ -348,7 +358,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
   It not have some features than a real hardware debugger,
   but is good features, for when yet have none of this ...
-  It is for when not have a real hardware debugger, 
+  It is for when not have a real hardware debugger,
   e.g. GDB w/ JTAG, or not have skill on it.
 
   It can be disabled (no compile), if not want it.
@@ -361,7 +371,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
 
     For release your device, just uncomment DEBUG_DISABLED in your project
     Done this, and no more serial messages, or debug things. A
-    And better for DEBUG_DISABLED, __SerialDebug__ have ZERO overhead, 
+    And better for DEBUG_DISABLED, __SerialDebug__ have ZERO overhead,
     due is nothing of this is compiled
 
 ## SerialDebugApp
@@ -418,19 +428,19 @@ __SerialDebug__ takes care of inputs from serial, and process predefined command
         p      -> show time between actual and last message (in millis)
         p min  -> show only if time is this minimal
       r -> repeat last command (in each debugHandle)
-        r ? -> to show more help 
+        r ? -> to show more help
       reset -> reset the Arduino board
 
       f -> call the function
-          f ?  -> to show more help 
+          f ?  -> to show more help
 
       dbg [on|off] -> enable/disable the simple software debugger
 
       Only if debugger is enabled:
           g -> see/change global variables
-            g ?  -> to show more help 
+            g ?  -> to show more help
           wa -> see/change watches for global variables
-            wa ?  -> to show more help 
+            wa ?  -> to show more help
 
       Not yet implemented:
         gpio -> see/control gpio
@@ -450,7 +460,7 @@ For simple software debugger:
       - To disable: dbg off
 
       Note: the debugger starts disabled, to avoid extra overhead to processing it
-      You can enable it when need 
+      You can enable it when need
 
     - For global variables:
 
@@ -522,7 +532,7 @@ Place it, in top of code:
   Setup code is only necessary for __debugger__ elements.
   As this library not uses a hardware debugger,
   this codes are necessary to add this elements,
-  into "simple software debugger" of SerialDebug. 
+  into "simple software debugger" of SerialDebug.
 
 For example, for __functions__:
 
@@ -736,7 +746,7 @@ printlnW("* This is a message of debug level WARNING");
 
 ### printf formatting (for __debug*__ macros)
 
-__SerialDebug__ use prinf native (for Espressif boards), 
+__SerialDebug__ use prinf native (for Espressif boards),
 or implements it in _depugPrintf_ function.
 
 For Example:
@@ -813,9 +823,9 @@ This is done before each _debug*_ show messages or in _debugHandle_ function.
 
 Have a nice tutorial about __SerialDebug__ in [randomnerdtutorials.com](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/):
 
-  - Better Debugging for Arduino IDE: SerialDebug Library (Part 1): [access part 1](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)
-  - Better Debugging for Arduino IDE using Software Debugger (Part 2): [access part 2](https://randomnerdtutorials.com/software-debugger-arduino-ide-serialdebug-library/)
-  - Better Debugging for Arduino IDE: SerialDebugApp (Part 3): [access part 3](https://randomnerdtutorials.com/software-debugger-arduino-ide-serialdebug-library/)
+- Better Debugging for Arduino IDE: SerialDebug Library (Part 1): [access part 1](https://randomnerdtutorials.com/serialdebug-library-arduino-ide/)
+- Better Debugging for Arduino IDE using Software Debugger (Part 2): [access part 2](https://randomnerdtutorials.com/software-debugger-arduino-ide-serialdebug-library/)
+- Better Debugging for Arduino IDE: SerialDebugApp (Part 3): [access part 3](https://randomnerdtutorials.com/software-debugger-arduino-ide-serialdebug-library/)
 
 Please access this tutorial, to give more information about how use __SerialDebug__ and __SerialDebugApp__.
 
@@ -828,6 +838,7 @@ Please access this tutorial, to give more information about how use __SerialDebu
 ### 0.9.82 - 2018-11-25
 
     - corrected bug on debugHandleEvent
+
 ### 0.9.81 - 2018-11-16
 
     - print macros now support second arg, e.g.: printlnA(10, HEX);
@@ -852,13 +863,13 @@ Please access this tutorial, to give more information about how use __SerialDebu
 
 ### 0.9.76 - 2018-10-26
 
-    -	#includes for Arduino.h corrected to work in Linux (case sensitive F.S.) - thanks @wd5gnr
+    - #includes for Arduino.h corrected to work in Linux (case sensitive F.S.) - thanks @wd5gnr
 
 ### 0.9.75 - 2018-10-25
   
     -  Few Adjustments (bug on declare prototype)
 
-### 0.9.74 - 2018-10-25	
+### 0.9.74 - 2018-10-25
   
     - Adjustments to SerialDebugApp show debugger info in App
     - Now low memory boards have debugger disabled by default, but enabled commands (debug level, help ...)
@@ -880,7 +891,7 @@ Please access this tutorial, to give more information about how use __SerialDebu
 
     - Checking if debugger is enabled
 
-### 0.9.6	- 2018-10-09
+### 0.9.6 - 2018-10-09
 
     - New debug format output
 
