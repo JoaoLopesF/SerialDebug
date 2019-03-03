@@ -939,3 +939,8 @@ Special thanks to:
       That inspire me to make new libraries, as SerialDebug, RemoteDebug, etc.
 
     - Makers people, that works together as a big family.
+
+## End of README
+
+Hit counter on this file, starting at 2019-03-03:
+[![HitCount](http://hits.dwyl.io/JoaoLopesF/SerialDebug.svg)](http://hits.dwyl.io/JoaoLopesF/SerialDebug)
