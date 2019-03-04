@@ -496,7 +496,7 @@ Just download or clone this repository.
 Or for Arduino IDE, you can use the library manager to install and update the library.
 For install help, please see: [https://www.arduino.cc/en/Guide/Libraries](https://www.arduino.cc/en/Guide/Libraries)
 
-![instal]!(extras/readme_media/logo.png)
+![install](extras/readme_media/install.png)
 
 Note: In some boards, after upload if you see only dirty characteres in serial monitor,
 please reset the board. There is possibly some glitch in the serial monitor of Arduino
