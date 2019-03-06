@@ -5,7 +5,7 @@
 [![GitHub release](https://img.shields.io/github/release/JoaoLopesF/SerialDebug.svg)](#releases) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 [![platform badge](https://img.shields.io/badge/platform-Arduino-orange.svg)](https://github.com/arduino)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/JoaoLopesF/SerialDebug/issues)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#github)
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
 
 Improved serial debugging to Arduino, with with debug levels and simple software debugger,
@@ -83,9 +83,6 @@ this help a another people, discover it too.
 Please add a issue for problems or suggestion.
 
 And please join in the Gitter chat room ([SerialDebug on Gitter](https://gitter.im/SerialDebug/Public)).
-
-I suggest you use a Github Desktop New app to clone,
-it help to keep updated.
 
 ## Benefits
 
@@ -497,6 +494,9 @@ Or for Arduino IDE, you can use the library manager to install and update the li
 For install help, please see: [https://www.arduino.cc/en/Guide/Libraries](https://www.arduino.cc/en/Guide/Libraries)
 
 ![install](extras/readme_media/install.png)
+
+For another IDE, or not using the library manager of Arduino IDE,
+I suggest you use a [Github Desktop](https://desktop.github.com/) app  to clone,it help to keep updated.
 
 Note: In some boards, after upload if you see only dirty characteres in serial monitor,
 please reset the board. There is possibly some glitch in the serial monitor of Arduino
