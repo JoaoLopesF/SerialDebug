@@ -498,10 +498,10 @@ For install help, please see: [https://www.arduino.cc/en/Guide/Libraries](https:
 For another IDE, or not using the library manager of Arduino IDE,
 I suggest you use a [Github Desktop](https://desktop.github.com/) app  to clone,it help to keep updated.
 
+## Usage
+
 Note: In some boards, after upload if you see only dirty characteres in serial monitor,
 please reset the board. There is possibly some glitch in the serial monitor of Arduino
-
-## Usage
 
 ### examples
 
