@@ -2,6 +2,7 @@
 
 ![logo](extras/readme_media/logo.png)
 
+[![arduino-library-badge](https://www.ardu-badge.com/badge/SerialDebug.svg?)](https://www.ardu-badge.com/SerialDebug)
 [![GitHub release](https://img.shields.io/github/release/JoaoLopesF/SerialDebug.svg)](#releases) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ddb5c53fa29416eb1d1eaaf6f201ec6)](https://app.codacy.com/app/JoaoLopesF/SerialDebug?utm_source=github.com&utm_medium=referral&utm_content=JoaoLopesF/SerialDebug&utm_campaign=Badge_Grade_Settings)
 [![platform badge](https://img.shields.io/badge/platform-Arduino-orange.svg)](https://github.com/arduino)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt)
