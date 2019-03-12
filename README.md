@@ -8,6 +8,8 @@
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/JoaoLopesF/SerialDebug/blob/master/LICENSE.txt)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#github)
 [![Gitter chat](https://badges.gitter.im/SerialDebug/gitter.png)](https://gitter.im/SerialDebug/Public)
+[![GitHub issues](https://img.shields.io/github/issues/JoaoLopesF/SerialDebug.svg)](http://github.com/JoaoLopesF/SerialDebug/issues)
+[![star this repo](http://githubbadges.com/star.svg?user=JoaoLopesF&repo=SerialDebug)](http://github.com/JoaoLopesF/SerialDebug)
 
 Improved serial debugging to Arduino, with with debug levels and simple software debugger,
 to see/change global variables, to add watch for these variables,
