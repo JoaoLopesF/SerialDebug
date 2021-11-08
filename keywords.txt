@@ -83,8 +83,25 @@ debugIsrD	KEYWORD2
 debugIsrI	KEYWORD2
 debugIsrW	KEYWORD2
 debugIsrE	KEYWORD2
+printA	KEYWORD2
+debugE	KEYWORD2
+debugD	KEYWORD2
+debugV	KEYWORD2
+debugI	KEYWORD2
+debugW	KEYWORD2
+printA	KEYWORD2
+printE	KEYWORD2
+printD	KEYWORD2
+printV  KEYWORD2
+printI	KEYWORD2
+printW	KEYWORD2
+printlnA	KEYWORD2
+printlnE  KEYWORD2
+printlnD	KEYWORD2
+printlnV	KEYWORD2
+printlnI	KEYWORD2
+printlnW	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
-
