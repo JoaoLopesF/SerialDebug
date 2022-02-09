@@ -840,6 +840,10 @@ Please access this tutorial, to give more information about how use __SerialDebu
 
 ## Releases
 
+### 0.9.83 - 2023-08-18
+
+    - replaced 'byte' by 'uint8_t'
+
 ### 0.9.82 - 2018-11-25
 
     - corrected bug on debugHandleEvent

@@ -230,7 +230,7 @@ void debugSetProfiler(boolean active);
 
 		int8_t debugAddGlobalBoolean (const char* name, boolean* pointer);
 		int8_t debugAddGlobalChar (const char* name, char* pointer);
-		int8_t debugAddGlobalByte (const char* name, byte* pointer);
+		int8_t debugAddGlobalByte (const char* name, uint8_t* pointer);
 		int8_t debugAddGlobalInt (const char* name, int* pointer);
 		int8_t debugAddGlobalUInt (const char* name, unsigned int* pointer);
 		int8_t debugAddGlobalLong (const char* name, long* pointer);
@@ -267,7 +267,7 @@ void debugSetProfiler(boolean active);
 
 		int8_t debugAddGlobalBoolean (const __FlashStringHelper* name, boolean* pointer);
 		int8_t debugAddGlobalChar (const __FlashStringHelper* name, char* pointer);
-		int8_t debugAddGlobalByte (const __FlashStringHelper* name, byte* pointer);
+		int8_t debugAddGlobalByte (const __FlashStringHelper* name, uint8_t* pointer);
 		int8_t debugAddGlobalInt (const __FlashStringHelper* name, int* pointer);
 		int8_t debugAddGlobalUInt (const __FlashStringHelper* name, unsigned int* pointer);
 		int8_t debugAddGlobalLong (const __FlashStringHelper* name, long* pointer);
@@ -297,7 +297,7 @@ void debugSetProfiler(boolean active);
 
 		int8_t debugAddWatchBoolean (uint8_t globalNum, uint8_t operation, boolean value, boolean allwaysStop = false);
 		int8_t debugAddWatchChar (uint8_t globalNum, uint8_t operation, char value, boolean allwaysStop = false);
-		int8_t debugAddWatchByte (uint8_t globalNum, uint8_t operation, byte value, boolean allwaysStop = false);
+		int8_t debugAddWatchByte (uint8_t globalNum, uint8_t operation, uint8_t value, boolean allwaysStop = false);
 		int8_t debugAddWatchInt (uint8_t globalNum, uint8_t operation, int value, boolean allwaysStop = false);
 		int8_t debugAddWatchUInt (uint8_t globalNum, uint8_t operation, unsigned int value, boolean allwaysStop = false);
 		int8_t debugAddWatchLong (uint8_t globalNum, uint8_t operation, long value, boolean allwaysStop = false);
@@ -316,7 +316,7 @@ void debugSetProfiler(boolean active);
 
 		int8_t debugAddWatchBoolean  (const char* globalName, uint8_t operation, boolean value, boolean allwaysStop = false);
 		int8_t debugAddWatchChar  (const char* globalName, uint8_t operation, char value, boolean allwaysStop = false);
-		int8_t debugAddWatchByte  (const char* globalName, uint8_t operation, byte value, boolean allwaysStop = false);
+		int8_t debugAddWatchByte  (const char* globalName, uint8_t operation, uint8_t value, boolean allwaysStop = false);
 		int8_t debugAddWatchInt  (const char* globalName, uint8_t operation, int value, boolean allwaysStop = false);
 		int8_t debugAddWatchUInt  (const char* globalName, uint8_t operation, unsigned int value, boolean allwaysStop = false);
 		int8_t debugAddWatchLong  (const char* globalName, uint8_t operation, long value, boolean allwaysStop = false);
