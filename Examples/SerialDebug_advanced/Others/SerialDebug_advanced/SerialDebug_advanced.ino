@@ -116,7 +116,7 @@ boolean mLedON = false;
 
 boolean mBoolean = false;
 char mChar = 'X';
-byte mByte = 'Y';
+uint8_t mByte = 'Y';
 int mInt = 1;
 unsigned int mUInt = 2;
 long mLong = 3;
